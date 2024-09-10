@@ -22,7 +22,7 @@ function App() {
       setUser(currentUser);
       if (currentUser) fetchPasswords();
     });
-  }, []);
+  }, [user]);
 
   const encryptPassword = (password) => {
     return CryptoJS.AES.encrypt(password, "secret-key").toString();
@@ -83,6 +83,9 @@ function App() {
   return (
     <div className="App">
       <h1>Passman: Your Password Manager</h1>
+      {user ? (
+        <p>logged in as: {user.email}</p>
+      ) : ''}
       {user ? (
         <div>
           <button onClick={handleLogout}>Logout</button>
