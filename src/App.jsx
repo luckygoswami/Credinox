@@ -9,6 +9,8 @@ import {
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import CryptoJS from "crypto-js";
 
+import LoginForm from "./components/LoginForm";
+
 function App() {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
@@ -114,25 +116,7 @@ function App() {
             ))}
           </ul>
         </div>
-      ) : (
-        <div>
-          <h2>Sign In / Sign Up</h2>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleSignIn}>Sign In</button>
-          <button onClick={handleSignUp}>Sign Up</button>
-        </div>
-      )}
+      ) : (<LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} handleSignIn={handleSignIn} handleSignUp={handleSignUp} />)}
     </div>
   );
 }
