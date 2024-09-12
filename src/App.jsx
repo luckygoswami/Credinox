@@ -104,7 +104,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-indigo-600 py-4 shadow-md">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">Passman</h1>
@@ -112,7 +112,7 @@ function App() {
         </div>
       </header>
 
-      <main className="container mx-auto mt-10">
+      <main className="container mx-auto mt-10 flex-1 flex flex-col justify-center">
         {user ? (
           <div className="flex flex-col items-center">
             <p className="text-xl text-gray-700 mb-4">
