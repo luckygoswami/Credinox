@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function AuthForm({
   email,
@@ -29,4 +29,4 @@ function AuthForm({
   );
 }
 
-export default AuthForm
+export default AuthForm;
