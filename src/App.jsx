@@ -84,6 +84,7 @@ function App() {
   }, [user]);
 
   const DashboardProps = {
+    user,
     handleLogout,
     service,
     setService,
@@ -114,25 +115,15 @@ function App() {
 
       <main className="container mx-auto mt-10 flex-1 flex flex-col justify-center">
         {user ? (
-          <div className="flex flex-col items-center">
-            <p className="text-xl text-gray-700 mb-4">
-              Logged in as:{" "}
-              <span className="font-semibold text-indigo-600">
-                {user.email}
-              </span>
-            </p>
-            <Dashboard {...DashboardProps} />
-          </div>
+          <Dashboard {...DashboardProps} />
         ) : (
-          <div className="flex items-center justify-center">
-            <AuthForm {...AuthProps} />
-          </div>
+          <AuthForm {...AuthProps} />
         )}
       </main>
 
       <footer className="bg-gray-800 py-4 mt-12">
         <div className="container mx-auto text-center text-gray-400">
-          &copy; {new Date().getFullYear()} Passman. All rights reserved.
+          &copy; {new Date().getFullYear()} Passman by <a href="https:github.com/Luckygoswami" target="_blank">Lucky Goswami</a>. All rights reserved.
         </div>
       </footer>
     </div>
