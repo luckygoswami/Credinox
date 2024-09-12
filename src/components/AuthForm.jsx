@@ -1,6 +1,13 @@
-import React from "react";
+import React from 'react'
 
-function LoginForm({ email, setEmail, password, setPassword, handleSignIn, handleSignUp }) {
+function AuthForm({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  handleSignIn,
+  handleSignUp,
+}) {
   return (
     <div>
       <h2>Sign In / Sign Up</h2>
@@ -22,4 +29,4 @@ function LoginForm({ email, setEmail, password, setPassword, handleSignIn, handl
   );
 }
 
-export default LoginForm;
+export default AuthForm

@@ -1,39 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase-config";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import CryptoJS from "crypto-js";
 
-import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
+import AuthForm from './components/AuthForm'
 
 function App() {
   const [user, setUser] = useState(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [passwords, setPasswords] = useState([]);
   const [newPassword, setNewPassword] = useState("");
   const [service, setService] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) fetchPasswords();
-    });
-  }, [user]);
-
-  const encryptPassword = (password) => {
-    return CryptoJS.AES.encrypt(password, "secret-key").toString();
-  };
-
-  const decryptPassword = (encryptedPassword) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPassword, "secret-key");
-    return bytes.toString(CryptoJS.enc.Utf8);
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSignUp = async () => {
     try {
@@ -49,6 +34,15 @@ function App() {
     } catch (error) {
       console.error("Error signing in", error);
     }
+  };
+
+  const encryptPassword = (password) => {
+    return CryptoJS.AES.encrypt(password, "secret-key").toString();
+  };
+
+  const decryptPassword = (encryptedPassword) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedPassword, "secret-key");
+    return bytes.toString(CryptoJS.enc.Utf8);
   };
 
   const handleLogout = async () => {
@@ -82,42 +76,39 @@ function App() {
     setPasswords(passwordList);
   };
 
-  return (
-    <div className="App">
-      <h1>Passman: Your Password Manager</h1>
-      {user ? (
-        <p>logged in as: {user.email}</p>
-      ) : ''}
-      {user ? (
-        <div>
-          <button onClick={handleLogout}>Logout</button>
-          <h2>Save a new password</h2>
-          <input
-            type="text"
-            placeholder="Service Name"
-            value={service}
-            onChange={(e) => setService(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <button onClick={savePassword}>Save Password</button>
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) fetchPasswords();
+    });
+  }, [user]);
 
-          <h2>Your Saved Passwords</h2>
-          <ul>
-            {passwords.map((password) => (
-              <li key={password.id}>
-                <strong>{password.service}:</strong>{" "}
-                {decryptPassword(password.password)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (<LoginForm email={email} setEmail={setEmail} password={password} setPassword={setPassword} handleSignIn={handleSignIn} handleSignUp={handleSignUp} />)}
-    </div>
+  const DashboardProps = {
+    handleLogout,
+    service,
+    setService,
+    newPassword,
+    setNewPassword,
+    savePassword,
+    passwords,
+    decryptPassword,
+  };
+
+  const AuthProps = {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    handleSignIn,
+    handleSignUp,
+  };
+
+  return (
+    <>
+      <h1>Passman: Your Credentials Manager</h1>
+      {user ? <p>logged in as: {user.email}</p> : null}
+      {user ? <Dashboard {...DashboardProps} /> : <AuthForm {...AuthProps} />}
+    </>
   );
 }
 
