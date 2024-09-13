@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import PasswordWrapper from "./PasswordWrapper";
 
 function AuthForm({
   email,
@@ -8,6 +9,8 @@ function AuthForm({
   handleSignIn,
   handleSignUp,
 }) {
+  const [passVisibility, setPassVisibility] = useState(false);
+
   return (
     <div className="flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -22,12 +25,11 @@ function AuthForm({
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
           />
-          <input
-            type="password"
-            placeholder="Password"
+          <PasswordWrapper
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+            passVisibility={passVisibility}
+            setPassVisibility={setPassVisibility}
           />
           <div className="flex justify-between space-x-2">
             <button

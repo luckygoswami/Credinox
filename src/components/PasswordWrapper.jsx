@@ -1,16 +1,15 @@
-import React from 'react'
-import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+import React from "react";
+import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
-function PasswordWrapper({ passVisibility, setPassVisibility, newPassword, setNewPassword }) {
-
+function PasswordWrapper({ passVisibility, setPassVisibility, value, onChange }) {
   return (
     <div className="password-wrapper relative">
       <input
         id="new-password"
-        type={passVisibility ? "password" : "text"}
+        type={passVisibility ? "text" : "password"}
         placeholder="Password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
+        value={value}
+        onChange={onChange}
         className="p-3 pr-10  border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
       />
       <button
@@ -21,7 +20,7 @@ function PasswordWrapper({ passVisibility, setPassVisibility, newPassword, setNe
         <i className={`bi ${passVisibility ? "bi-eye" : "bi-eye-slash"}`}></i>
       </button>
     </div>
-  )
+  );
 }
 
-export default PasswordWrapper 
+export default PasswordWrapper;

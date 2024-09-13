@@ -12,15 +12,10 @@ function Dashboard({
   passwords,
   decryptPassword,
 }) {
-  const [passVisibility, setPassVisibility] = useState(true);
-  const passwordWrapperProps = {
-    newPassword, setNewPassword, passVisibility, setPassVisibility
-  }
+  const [passVisibility, setPassVisibility] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-10">
-      <button onClick={() => setPassVisibility(!passVisibility)}>visibility</button>
-
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-3xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
@@ -45,7 +40,12 @@ function Dashboard({
               onChange={(e) => setService(e.target.value)}
               className="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <PasswordWrapper {...passwordWrapperProps} />
+            <PasswordWrapper
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              passVisibility={passVisibility}
+              setPassVisibility={setPassVisibility}
+            />
             <button
               onClick={savePassword}
               className="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
