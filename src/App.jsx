@@ -123,7 +123,8 @@ function App() {
 
       <footer className="bg-gray-800 py-4 mt-12">
         <div className="container mx-auto text-center text-gray-400">
-          &copy; {new Date().getFullYear()} Passman by <a href="https:github.com/Luckygoswami" target="_blank">Lucky Goswami</a>. All rights reserved.
+          &copy; {new Date().getFullYear()} Passman. All rights reserved. <br />
+          Powered by <a href="https:github.com/Luckygoswami" target="_blank">Lucky Goswami</a>
         </div>
       </footer>
     </div>
