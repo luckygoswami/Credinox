@@ -27,7 +27,7 @@ function Dashboard({
           </button>
         </div>
 
-        <div className="password-fields-container overflow-auto pl-5">
+        <div className="password-fields-container overflow-auto pl-5 pr-1">
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               Save a New Password
