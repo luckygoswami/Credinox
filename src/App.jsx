@@ -11,6 +11,7 @@ import CryptoJS from "crypto-js";
 
 import Dashboard from "./components/Dashboard";
 import AuthForm from './components/AuthForm'
+import PasswordGenerator from "./components/PasswordGenerator";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -105,7 +106,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
       <header className="bg-indigo-600 py-4 shadow-md">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">Passman</h1>
@@ -113,15 +114,16 @@ function App() {
         </div>
       </header>
 
-      <main className="container mx-auto mt-10 flex-1 flex flex-col justify-center">
+      <main className="container mx-auto my-10 flex justify-between px-10 overflow-auto">
         {user ? (
           <Dashboard {...DashboardProps} />
         ) : (
           <AuthForm {...AuthProps} />
         )}
+        <PasswordGenerator />
       </main>
 
-      <footer className="bg-gray-800 py-4 mt-12">
+      <footer className="bg-gray-800 py-4">
         <div className="container mx-auto text-center text-gray-400">
           &copy; {new Date().getFullYear()} Passman. All rights reserved. <br />
           Powered by <a href="https:github.com/Luckygoswami" target="_blank">Lucky Goswami</a>
