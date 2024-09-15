@@ -2,7 +2,9 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 
 function PasswordGenerator() {
   const [length, setLength] = useState(8);
-  const [numberAllowed, setNumberAllowed] = useState(false);
+  const [uppercaseAllowed, setUppercaseAllowed] = useState(false);
+  const [lowercaseAllowed, setLowercaseAllowed] = useState(true);
+  const [numberAllowed, setNumberAllowed] = useState(true);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
 
@@ -10,8 +12,10 @@ function PasswordGenerator() {
 
   const passwordGenerator = useCallback(() => {
     let pass = "";
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let str = "";
 
+    if (uppercaseAllowed) str += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (lowercaseAllowed) str += 'abcdefghijklmnopqrstuvwxyz';
     if (numberAllowed) str += "0123456789";
     if (charAllowed) str += '!@#$%^&*()-_=+[]{}|;:",.<>?/~`';
 
@@ -21,7 +25,7 @@ function PasswordGenerator() {
     }
 
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed, setPassword]);
+  }, [length, numberAllowed, charAllowed, uppercaseAllowed, lowercaseAllowed, setPassword]);
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
@@ -30,7 +34,7 @@ function PasswordGenerator() {
 
   useEffect(() => {
     passwordGenerator();
-  }, [length, charAllowed, numberAllowed, passwordGenerator]);
+  }, [length, charAllowed, numberAllowed, uppercaseAllowed, lowercaseAllowed, passwordGenerator]);
 
   return (
     <div className="w-full sm:w-[30%] p-3">
@@ -65,7 +69,7 @@ function PasswordGenerator() {
               <input
                 type="range"
                 min={6}
-                max={100}
+                max={32}
                 value={length}
                 className="cursor-pointer accent-orange-500"
                 onChange={(e) => setLength(e.target.value)}
@@ -78,7 +82,7 @@ function PasswordGenerator() {
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              checked={numberAllowed}
+              defaultChecked={numberAllowed}
               id="numberInput"
               className="accent-orange-500 cursor-pointer"
               onChange={() => setNumberAllowed((prev) => !prev)}
@@ -86,16 +90,40 @@ function PasswordGenerator() {
             <label htmlFor="numberInput" className="cursor-pointer">Include Numbers</label>
           </div>
 
-          {/* Characters Toggle */}
+          {/* Special Characters Toggle */}
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              checked={charAllowed}
+              defaultChecked={charAllowed}
               id="charInput"
               className="accent-orange-500 cursor-pointer"
               onChange={() => setCharAllowed((prev) => !prev)}
             />
             <label htmlFor="charInput" className="cursor-pointer">Include Characters</label>
+          </div>
+
+          {/* Uppercase Toggle */}
+          <div className="flex items-center gap-x-3">
+            <input
+              type="checkbox"
+              defaultChecked={uppercaseAllowed}
+              id="uppercaseInput"
+              className="accent-orange-500 cursor-pointer"
+              onChange={() => setUppercaseAllowed((prev) => !prev)}
+            />
+            <label htmlFor="charInput" className="cursor-pointer">Include Uppercase Characters</label>
+          </div>
+
+          {/* Lowercase Toggle */}
+          <div className="flex items-center gap-x-3">
+            <input
+              type="checkbox"
+              defaultChecked={lowercaseAllowed}
+              id="lowercaseInput"
+              className="accent-orange-500 cursor-pointer"
+              onChange={() => setLowercaseAllowed((prev) => !prev)}
+            />
+            <label htmlFor="charInput" className="cursor-pointer">Include Lowercase Characters</label>
           </div>
 
           {/* Generate Password Button */}
