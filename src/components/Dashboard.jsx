@@ -16,7 +16,7 @@ function Dashboard({
 
   return (
     <div className="w-[60%] h-[100%] max-w-3xl p-4">
-      <div className="flex flex-col bg-white rounded-lg h-[100%] shadow-lg">
+      <div className="flex flex-col bg-white rounded-lg overflow-hidden h-[100%] shadow-lg">
         <div className="user-info flex justify-between items-center p-3">
           <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
           <button
@@ -27,7 +27,7 @@ function Dashboard({
           </button>
         </div>
 
-        <div className="password-fields-container overflow-auto pl-5 pr-1">
+        <div className={`password-fields-container overflow-auto pl-5 ${passwords.length > 0 ? 'pr-1' : 'pr-5'}`}>
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               Save a New Password

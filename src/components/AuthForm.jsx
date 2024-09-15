@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 
 function AuthForm({
-  email,
-  setEmail,
-  password,
-  setPassword,
+  userEmail,
+  setUserEmail,
+  userPassword,
+  setUserPassword,
   handleSignIn,
   handleSignUp,
 }) {
@@ -21,13 +21,13 @@ function AuthForm({
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
           />
           <PasswordWrapper
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={userPassword}
+            onChange={(e) => setUserPassword(e.target.value)}
             passVisibility={passVisibility}
             setPassVisibility={setPassVisibility}
           />

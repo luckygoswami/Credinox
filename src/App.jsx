@@ -18,24 +18,35 @@ function App() {
   const [passwords, setPasswords] = useState([]);
   const [newPassword, setNewPassword] = useState("");
   const [service, setService] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
 
   const handleSignUp = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, userEmail, userPassword);
     } catch (error) {
       console.error("Error signing up", error);
     }
   };
 
-  const handleSignIn = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error("Error signing in", error);
-    }
+  // const handleSignIn = async () => {
+  //   try {
+  //     await signInWithEmailAndPassword(auth, userEmail, userPassword);
+  //   } catch (error) {
+  //     console.error("Error signing in", error);
+  //   }
+  // };
+
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(auth, userEmail, userPassword)
+      .then(() => {
+        console.log("Sign in successful");
+      })
+      .catch((error) => {
+        console.error("Error signing in", error);
+      });
   };
+
 
   const encryptPassword = (password) => {
     return CryptoJS.AES.encrypt(password, "secret-key").toString();
@@ -47,8 +58,8 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
     setPasswords([]);
+    await signOut(auth);
   };
 
   const savePassword = async () => {
@@ -97,10 +108,10 @@ function App() {
   };
 
   const AuthProps = {
-    email,
-    setEmail,
-    password,
-    setPassword,
+    userEmail,
+    setUserEmail,
+    userPassword,
+    setUserPassword,
     handleSignIn,
     handleSignUp,
   };
