@@ -26,7 +26,10 @@ function App() {
   useEffect(() => {
     const checkSession = () => {
       const passmanLastLoginTime = localStorage.getItem("passmanLastLoginTime");
-      if (passmanLastLoginTime && Date.now() - Number(passmanLastLoginTime) > SESSION_TIMEOUT) {
+      if (
+        passmanLastLoginTime &&
+        Date.now() - Number(passmanLastLoginTime) > SESSION_TIMEOUT
+      ) {
         handleLogout();
       }
     };
@@ -93,6 +96,7 @@ function App() {
     setPasswords([]);
     await signOut(auth);
     localStorage.removeItem("passmanLastLoginTime");
+    setUserPassword("");
   };
 
   const savePassword = async () => {
