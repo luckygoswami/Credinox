@@ -147,7 +147,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
+    <div className="sm:h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
       <header className="bg-indigo-600 py-4 shadow-md">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">Passman</h1>
@@ -155,7 +155,7 @@ function App() {
         </div>
       </header>
 
-      <main className="container mx-auto my-10 flex justify-between px-10 overflow-auto">
+      <main className="container mx-auto sm:my-10 flex flex-col sm:flex-row justify-between sm:px-10 overflow-auto">
         {user ? <Dashboard {...DashboardProps} /> : <AuthForm {...AuthProps} />}
         <PasswordGenerator />
       </main>

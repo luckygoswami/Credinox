@@ -15,7 +15,7 @@ function Dashboard({
   const [passVisibility, setPassVisibility] = useState(false);
 
   return (
-    <div className="w-[60%] h-[100%] max-w-3xl p-4">
+    <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">
       <div className="flex flex-col bg-white rounded-lg overflow-hidden h-[100%] shadow-lg">
 
         {/* Dashboard header */}
@@ -23,14 +23,14 @@ function Dashboard({
           <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
+            className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
           >
             Logout
           </button>
         </div>
 
         {/* Credentials operations */}
-        <div className={`password-fields-container overflow-auto pl-5 ${passwords.length > 0 ? 'pr-1' : 'pr-5'}`}>
+        <div className={`password-fields-container overflow-auto px-4 sm:pl-5 ${passwords.length > 0 ? 'sm:pr-1' : 'sm:pr-5'}`}>
 
           {/* New credential */}
           <div className="mb-6">
