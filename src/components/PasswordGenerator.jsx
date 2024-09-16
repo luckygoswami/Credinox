@@ -38,7 +38,7 @@ function PasswordGenerator() {
   }, [length, charAllowed, numberAllowed, uppercaseAllowed, lowercaseAllowed, passwordGenerator]);
 
   return (
-    <div className="w-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto">
+    <div className="w-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto flex justify-center">
       <div className="w-full h-full pt-5 pb-3 px-5 flex flex-col justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-gray-800 overflow-auto">
         {/* Header */}
         <h1 className="text-white text-center text-lg font-semibold">🔐 Random Password Generator</h1>
