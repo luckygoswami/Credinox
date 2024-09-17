@@ -79,7 +79,8 @@ function App() {
         localStorage.setItem("passmanLastLoginTime", Date.now().toString());
       })
       .catch((error) => {
-        console.error("Error signing in", error);
+        console.log(error);
+        alert(error.message);
       });
   };
 
@@ -111,6 +112,7 @@ function App() {
       fetchPasswords();
     } catch (error) {
       console.error("Error saving password", error);
+      alert(error.message);
     }
   };
 
