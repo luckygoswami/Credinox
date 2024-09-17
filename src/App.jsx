@@ -14,6 +14,7 @@ import AuthForm from "./components/AuthForm";
 import PasswordGenerator from "./components/PasswordGenerator";
 
 const SESSION_TIMEOUT = 60 * 60 * 1000; // 60 minutes in milliseconds
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function App() {
   const [user, setUser] = useState(null);
@@ -85,11 +86,11 @@ function App() {
   };
 
   const encryptPassword = (password) => {
-    return CryptoJS.AES.encrypt(password, "secret-key").toString();
+    return CryptoJS.AES.encrypt(password, ENCRYPTION_KEY).toString();
   };
 
   const decryptPassword = (encryptedPassword) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPassword, "secret-key");
+    const bytes = CryptoJS.AES.decrypt(encryptedPassword, ENCRYPTION_KEY);
     return bytes.toString(CryptoJS.enc.Utf8);
   };
 
