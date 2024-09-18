@@ -26,3 +26,9 @@ dist-ssr
 tempFile.js
 .env
 .env.production
+
+# Firebase files
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules

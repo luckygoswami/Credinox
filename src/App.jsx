@@ -151,7 +151,7 @@ function App() {
 
   return (
     <div className="sm:h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
-      <header className="bg-indigo-600 py-4 shadow-md">
+      <header className=" bg-[#0278ff] py-4 shadow-md">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">Passman</h1>
           <p className="text-white text-lg">Your Credentials Manager</p>
