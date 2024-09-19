@@ -26,10 +26,10 @@ function App() {
 
   useEffect(() => {
     const checkSession = () => {
-      const passmanLastLoginTime = localStorage.getItem("passmanLastLoginTime");
+      const credinoxLastLoginTime = localStorage.getItem("credinoxLastLoginTime");
       if (
-        passmanLastLoginTime &&
-        Date.now() - Number(passmanLastLoginTime) > SESSION_TIMEOUT
+        credinoxLastLoginTime &&
+        Date.now() - Number(credinoxLastLoginTime) > SESSION_TIMEOUT
       ) {
         handleLogout();
       }
@@ -39,10 +39,10 @@ function App() {
       if (currentUser) {
         checkSession();
         setUser(currentUser);
-        localStorage.setItem("passmanLastLoginTime", Date.now().toString());
+        localStorage.setItem("credinoxLastLoginTime", Date.now().toString());
       } else {
         setUser(null);
-        localStorage.removeItem("passmanLastLoginTime");
+        localStorage.removeItem("credinoxLastLoginTime");
       }
     });
 
@@ -54,7 +54,7 @@ function App() {
       fetchPasswords();
       const interval = setInterval(() => {
         if (
-          Date.now() - Number(localStorage.getItem("passmanLastLoginTime")) >
+          Date.now() - Number(localStorage.getItem("credinoxLastLoginTime")) >
           SESSION_TIMEOUT
         ) {
           handleLogout();
@@ -77,7 +77,7 @@ function App() {
     signInWithEmailAndPassword(auth, userEmail, userPassword)
       .then(() => {
         console.log("Sign in successful");
-        localStorage.setItem("passmanLastLoginTime", Date.now().toString());
+        localStorage.setItem("credinoxLastLoginTime", Date.now().toString());
       })
       .catch((error) => {
         console.log(error);
@@ -97,7 +97,7 @@ function App() {
   const handleLogout = async () => {
     setPasswords([]);
     await signOut(auth);
-    localStorage.removeItem("passmanLastLoginTime");
+    localStorage.removeItem("credinoxLastLoginTime");
     setUserPassword("");
   };
 
@@ -153,7 +153,7 @@ function App() {
     <div className="sm:h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
       <header className=" bg-[#0278ff] py-4 shadow-md">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-bold text-white">Passman</h1>
+          <h1 className="text-3xl font-bold text-white">Credinox</h1>
           <p className="text-white text-lg">Your Credentials Manager</p>
         </div>
       </header>
@@ -165,7 +165,7 @@ function App() {
 
       <footer className="bg-gray-800 py-4">
         <div className="container mx-auto text-center text-gray-400">
-          &copy; {new Date().getFullYear()} Passman. All rights reserved. <br />
+          &copy; {new Date().getFullYear()} Credinox. All rights reserved. <br />
           Powered by{" "}
           <a
             href="https://github.com/Luckygoswami"

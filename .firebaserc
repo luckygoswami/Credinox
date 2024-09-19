@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "passman-for-personal"
-  }
+    "default": "credinox"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

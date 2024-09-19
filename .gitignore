@@ -23,10 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-tempFile.js
 .env
-.env.production
 
 # Firebase files
+.firebaserc
 firestore.indexes.json
 firestore.rules
