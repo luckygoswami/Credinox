@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 import CryptoJS from "crypto-js";
 
 import Dashboard from "./components/Dashboard";
@@ -112,7 +112,21 @@ function App() {
       setNewPassword("");
       fetchPasswords();
     } catch (error) {
-      console.error("Error saving password", error);
+      console.error("Error saving credential", error);
+      alert(error.message);
+    }
+  };
+
+  const handleDelete = async (passwordId) => {
+    try {
+      await deleteDoc(doc(db, "users", user.uid, "passwords", passwordId));
+      await fetchPasswords();
+
+      setTimeout(() => {
+        alert("credential deleted successfully");
+      }, 100);
+    } catch (error) {
+      console.error("Error deleting credential", error);
       alert(error.message);
     }
   };
@@ -138,6 +152,7 @@ function App() {
     savePassword,
     passwords,
     decryptPassword,
+    handleDelete,
   };
 
   const AuthProps = {

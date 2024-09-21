@@ -11,6 +11,7 @@ function Dashboard({
   savePassword,
   passwords,
   decryptPassword,
+  handleDelete
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
 
@@ -71,13 +72,18 @@ function Dashboard({
                 passwords.map((password) => (
                   <li
                     key={password.id}
-                    className="py-4 flex justify-between"
+                    className={`py-4 flex justify-between max-w-[100%] gap-2 overflow-hidden p-4`}
                   >
-                    <span className="font-medium text-gray-800">
+                    <span className="font-medium text-gray-800 max-w-[50%]">
                       {password.service}
                     </span>
-                    <span className="text-gray-600">
-                      {decryptPassword(password.password)}
+                    <span className="cred-ops flex justify-end overflow-hidden">
+
+                      <span className="text-gray-600 break-words whitespace-normal inline-block w-full text-end">
+                        {decryptPassword(password.password)}
+                      </span>
+                      {/* <button onClick={() => handleEdit(password.id)}><i className="bi bi-pencil-square mx-2"></i></button> */}
+                      <button onClick={() => handleDelete(password.id)}><i className="bi bi-trash3-fill ml-2"></i></button>
                     </span>
                   </li>
                 ))
