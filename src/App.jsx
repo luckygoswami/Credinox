@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { auth, db } from "../firebase-config";
 import {
   signOut,
@@ -6,12 +6,20 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, doc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  updateDoc,
+  addDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import CryptoJS from "crypto-js";
 
 import Dashboard from "./components/Dashboard";
 import AuthForm from "./components/AuthForm";
 import PasswordGenerator from "./components/PasswordGenerator";
+import UserContext from "./context/UserContext";
 
 const SESSION_TIMEOUT = 60 * 60 * 1000; // 60 minutes in milliseconds
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
@@ -23,6 +31,8 @@ function App() {
   const [service, setService] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  const { setCurrentCredential } = useContext(UserContext);
 
   useEffect(() => {
     const checkSession = () => {
@@ -104,10 +114,13 @@ function App() {
   const savePassword = async () => {
     try {
       const encryptedPassword = encryptPassword(newPassword);
+
+      // Adding document in Firestore
       await addDoc(collection(db, "users", user.uid, "passwords"), {
         service: service,
         password: encryptedPassword,
       });
+
       setService("");
       setNewPassword("");
       fetchPasswords();
@@ -119,6 +132,7 @@ function App() {
 
   const handleDelete = async (passwordId) => {
     try {
+      // Delete the document in Firestore
       await deleteDoc(doc(db, "users", user.uid, "passwords", passwordId));
       await fetchPasswords();
 
@@ -128,6 +142,29 @@ function App() {
     } catch (error) {
       console.error("Error deleting credential", error);
       alert(error.message);
+    }
+  };
+
+  const handleUpdate = async (credentialId, updatedService, updatedPassword) => {
+    try {
+      const encryptedPassword = encryptPassword(updatedPassword);
+      const credentialRef = doc(db, "users", user.uid, "passwords", credentialId);
+
+      // Update the document in Firestore
+      await updateDoc(credentialRef, {
+        service: updatedService,
+        password: encryptedPassword,
+      });
+
+      await fetchPasswords();
+
+      setTimeout(() => {
+        alert("credential updated successfully");
+      }, 100);
+
+      setCurrentCredential(null);
+    } catch (error) {
+      console.error("Error updating credential: ", error);
     }
   };
 
@@ -153,6 +190,7 @@ function App() {
     passwords,
     decryptPassword,
     handleDelete,
+    handleUpdate,
   };
 
   const AuthProps = {

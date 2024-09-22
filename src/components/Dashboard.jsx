@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PasswordWrapper from "./PasswordWrapper";
+import EditCredentialForm from "./EditCredentialForm";
+import UserContext from "../context/UserContext";
 
 function Dashboard({
   user,
@@ -11,14 +13,21 @@ function Dashboard({
   savePassword,
   passwords,
   decryptPassword,
-  handleDelete
+  handleDelete,
+  handleUpdate,
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
+
+  const { currentCredential, setCurrentCredential } = useContext(UserContext);
+
+  const editCredFormProps = {
+    handleUpdate,
+    decryptPassword,
+  };
 
   return (
     <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">
       <div className="flex flex-col bg-white rounded-lg overflow-hidden h-[100%] shadow-lg">
-
         {/* Dashboard header */}
         <div className="user-info flex justify-between items-center p-3">
           <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
@@ -31,8 +40,11 @@ function Dashboard({
         </div>
 
         {/* Credentials operations */}
-        <div className={`password-fields-container overflow-auto px-4 sm:pl-5 ${passwords.length > 0 ? 'sm:pr-1' : 'sm:pr-5'}`}>
-
+        <div
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
+            passwords.length > 0 ? "sm:pr-1" : "sm:pr-5"
+          }`}
+        >
           {/* New credential */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
@@ -62,6 +74,9 @@ function Dashboard({
             </div>
           </div>
 
+          {/* Edit credential form */}
+          {currentCredential?.id && <EditCredentialForm {...editCredFormProps} />}
+
           {/* Saved credentials */}
           <div>
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
@@ -78,12 +93,23 @@ function Dashboard({
                       {password.service}
                     </span>
                     <span className="cred-ops flex justify-end overflow-hidden">
-
                       <span className="text-gray-600 break-words whitespace-normal inline-block w-full text-end">
                         {decryptPassword(password.password)}
                       </span>
-                      {/* <button onClick={() => handleEdit(password.id)}><i className="bi bi-pencil-square mx-2"></i></button> */}
-                      <button onClick={() => handleDelete(password.id)}><i className="bi bi-trash3-fill ml-2"></i></button>
+                      <button
+                        onClick={() => setCurrentCredential(password)}
+                        className="mx-2"
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
+                      {!currentCredential?.id && (
+                        <button
+                          onClick={() => handleDelete(password.id)}
+                          className="mx-2"
+                        >
+                          <i className="bi bi-trash3-fill"></i>
+                        </button>
+                      )}
                     </span>
                   </li>
                 ))
