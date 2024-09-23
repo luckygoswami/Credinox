@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 import EditCredentialForm from "./EditCredentialForm";
 import UserContext from "../context/UserContext";
@@ -17,8 +17,24 @@ function Dashboard({
   handleUpdate,
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
-
   const { currentCredential, setCurrentCredential } = useContext(UserContext);
+  const passRefs = useRef([]);
+
+  const handleCopy = (index) => {
+    const passwordElement = passRefs.current[index]; // Get the corresponding password element using the index.
+    const range = document.createRange(); // Create a range to select the text content.
+    range.selectNodeContents(passwordElement); // Select the contents of the password element.
+
+    // Clear any existing selections
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+
+    // Select the text inside the range (password text)
+    selection.addRange(range);
+
+    // Copy the selected text to the clipboard
+    window.navigator.clipboard.writeText(passwordElement.textContent);
+  };
 
   const editCredFormProps = {
     handleUpdate,
@@ -84,7 +100,7 @@ function Dashboard({
             </h3>
             <ul className="divide-y divide-gray-200">
               {passwords.length > 0 ? (
-                passwords.map((password) => (
+                passwords.map((password, index) => (
                   <li
                     key={password.id}
                     className={`py-4 flex justify-between max-w-[100%] gap-2 overflow-hidden p-4`}
@@ -92,24 +108,35 @@ function Dashboard({
                     <span className="font-medium text-gray-800 max-w-[50%]">
                       {password.service}
                     </span>
-                    <span className="cred-ops flex justify-end overflow-hidden">
-                      <span className="text-gray-600 break-words whitespace-normal inline-block w-full text-end">
+                    <span className="cred-data flex justify-end overflow-hidden">
+                      <span
+                        className="password-container text-gray-600 break-words whitespace-normal inline-block w-full text-end"
+                        ref={(el) => (passRefs.current[index] = el)}
+                      >
                         {decryptPassword(password.password)}
                       </span>
-                      <button
-                        onClick={() => setCurrentCredential(password)}
-                        className="mx-2"
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      {!currentCredential?.id && (
+                      <span className="flex justify-evenly gap-3 mx-2 cred-ops">
                         <button
-                          onClick={() => handleDelete(password.id)}
-                          className="mx-2"
+                          className="copy-btn"
+                          onClick={() => handleCopy(index)}
                         >
-                          <i className="bi bi-trash3-fill"></i>
+                          <i className="bi bi-copy"></i>
                         </button>
-                      )}
+                        <button
+                          onClick={() => setCurrentCredential(password)}
+                          className="edit-btn"
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        {!currentCredential?.id && (
+                          <button
+                            onClick={() => handleDelete(password.id)}
+                            className="dlt-btn"
+                          >
+                            <i className="bi bi-trash3-fill"></i>
+                          </button>
+                        )}
+                      </span>
                     </span>
                   </li>
                 ))
