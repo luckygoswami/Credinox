@@ -34,6 +34,10 @@ function Dashboard({
 
     // Copy the selected text to the clipboard
     window.navigator.clipboard.writeText(passwordElement.textContent);
+
+    setTimeout(() => {
+      selection.removeAllRanges();
+    }, 2000);
   };
 
   const editCredFormProps = {
@@ -57,9 +61,8 @@ function Dashboard({
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
-            passwords.length > 0 ? "sm:pr-1" : "sm:pr-5"
-          }`}
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${passwords.length > 0 ? "sm:pr-1" : "sm:pr-5"
+            }`}
         >
           {/* New credential */}
           <div className="mb-6">
