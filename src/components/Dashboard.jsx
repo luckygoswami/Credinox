@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 import EditCredentialForm from "./EditCredentialForm";
 import UserContext from "../context/UserContext";
@@ -44,6 +44,21 @@ function Dashboard({
     handleUpdate,
     decryptPassword,
   };
+
+  // Event handler for keydown
+  const handleKeyDown = (e) => {
+    e.key === 'Enter' && savePassword();
+  };
+
+  useEffect(() => {
+    const inputElement = document.getElementById("new-password");
+    inputElement.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      inputElement.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [service, newPassword]);
 
   return (
     <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">

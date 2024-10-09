@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 
 function AuthForm({
@@ -10,6 +10,21 @@ function AuthForm({
   handleSignUp,
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
+
+  // Event handler for keydown
+  const handleKeyDown = (e) => {
+    e.key === 'Enter' && handleSignIn();
+  };
+
+  useEffect(() => {
+    const inputElement = document.getElementById("new-password");
+    inputElement.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      inputElement.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [userPassword, userEmail]);
 
   return (
     <div className="flex items-center justify-center p-3 sm:w-[60%]">
