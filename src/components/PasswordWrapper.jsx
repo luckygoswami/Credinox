@@ -14,6 +14,7 @@ function PasswordWrapper({ passVisibility, setPassVisibility, value, onChange })
       />
       <button
         type="button"
+        tabindex='-1'
         onClick={() => setPassVisibility(!passVisibility)}
         className="absolute inset-y-0 right-3 flex items-center"
       >
