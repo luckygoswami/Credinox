@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 .firebase
-.env
+.env*
 tempfile.js
 
 # Firebase files
