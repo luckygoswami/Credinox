@@ -113,7 +113,7 @@ function App() {
 
   const savePassword = async (extraFields = null) => {
     if (!service) {
-      alert('Cannot leave the Service Name field empty')
+      alert("Cannot leave the Service Name field empty");
     } else {
       try {
         const encryptedPassword = encryptPassword(newPassword);
@@ -122,6 +122,8 @@ function App() {
         await addDoc(collection(db, "users", user.uid, "credentials"), {
           service: service,
           password: encryptedPassword,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
           ...extraFields,
         });
 
@@ -133,7 +135,6 @@ function App() {
         alert(error.message);
       }
     }
-
   };
 
   const handleDelete = async (passwordId) => {
@@ -160,6 +161,7 @@ function App() {
       await updateDoc(credentialRef, {
         service: updatedService,
         password: encryptedPassword,
+        updatedAt: Date.now(),
       });
 
       await fetchPasswords();

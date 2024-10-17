@@ -2,6 +2,13 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 import EditCredentialForm from "./EditCredentialForm";
 import UserContext from "../context/UserContext";
+const reservedKeywords = ["id", "service", "password", "createdAt", "updatedAt"];
+const getDateAndTime = (timestamp) => {
+  const dateAndTime = new Date(timestamp);
+  const fullDate = dateAndTime.toDateString();
+  const fullTime = dateAndTime.toLocaleTimeString();
+  return `${fullTime} on ${fullDate}`;
+};
 
 function Dashboard({
   user,
@@ -20,10 +27,10 @@ function Dashboard({
   const { currentCredential, setCurrentCredential } = useContext(UserContext);
   const passRefs = useRef([]);
   const [openIndex, setOpenIndex] = useState(null);
-  const [newField, setNewField] = useState(false)
-  const [newFieldName, setNewFieldName] = useState(null)
-  const [newFieldValue, setNewFieldValue] = useState(null)
-  const [extraFields, setExtraFields] = useState({})
+  const [newField, setNewField] = useState(false);
+  const [newFieldName, setNewFieldName] = useState(null);
+  const [newFieldValue, setNewFieldValue] = useState(null);
+  const [extraFields, setExtraFields] = useState({});
 
   const handleCopy = (index) => {
     const passwordElement = passRefs.current[index]; // Get the corresponding password element using the index.
@@ -46,19 +53,27 @@ function Dashboard({
   };
 
   const addField = () => {
-    !newFieldName || !newFieldValue ? alert('Cannot leave New Field Name or Value empty before saving!') : (() => {
-      extraFields[newFieldName] = newFieldValue;
-      setNewField(false)
-      setNewFieldName(null);
-      setNewFieldValue(null);
-    })();
-  }
+    !newFieldName || !newFieldValue
+      ? alert("Cannot leave New Field Name or Value empty before saving!")
+      : (() => {
+          if (reservedKeywords.includes(newFieldName)) {
+            alert(
+              `${newFieldName} is a reserved keyword, choose another name for the new field`
+            );
+          } else {
+            extraFields[newFieldName] = newFieldValue;
+            setNewField(false);
+            setNewFieldName(null);
+            setNewFieldValue(null);
+          }
+        })();
+  };
 
   const createDiscardField = () => {
     setNewField((prev) => !prev);
     setNewFieldName(null);
     setNewFieldValue(null);
-  }
+  };
 
   // Function to toggle open/close of a credential
   const toggleExpand = (index) => {
@@ -72,7 +87,7 @@ function Dashboard({
 
   // Event handler for keydown
   const handleKeyDown = (e) => {
-    e.key === 'Enter' && savePassword(extraFields);
+    e.key === "Enter" && savePassword(extraFields);
   };
 
   useEffect(() => {
@@ -101,8 +116,9 @@ function Dashboard({
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
-            }`}
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
+            credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
+          }`}
         >
           {/* New credential */}
           <div className="mb-6">
@@ -127,27 +143,48 @@ function Dashboard({
 
               {/* Dynamically add new created fields */}
               {Object.entries(extraFields).map(([key, value]) => (
-                <div key={key} className="flex gap-2">
-                  <input type="text" readOnly value={key} className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                  <input type="text" readOnly value={value} className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div
+                  key={key}
+                  className="flex gap-2"
+                >
+                  <input
+                    type="text"
+                    readOnly
+                    value={key}
+                    className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <input
+                    type="text"
+                    readOnly
+                    value={value}
+                    className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
               ))}
 
               {/* New field fields */}
-              {newField && <div className="flex flex-col gap-2 sm:flex-row">
-                <input type="text"
-                  placeholder="New field type or name"
-                  onChange={(e) => setNewFieldName(e.target.value)}
-                  className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <input type="text"
-                  placeholder="New field value"
-                  onChange={(e) => setNewFieldValue(e.target.value)}
-                  className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <button onClick={addField}
-                  className="addField-btn grow px-4 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
-                >Add
-                </button>
-              </div>}
+              {newField && (
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <input
+                    type="text"
+                    placeholder="New field type or name"
+                    onChange={(e) => setNewFieldName(e.target.value)}
+                    className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <input
+                    type="text"
+                    placeholder="New field value"
+                    onChange={(e) => setNewFieldValue(e.target.value)}
+                    className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={addField}
+                    className="addField-btn grow px-4 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
+                  >
+                    Add
+                  </button>
+                </div>
+              )}
 
               <div className="flex gap-2">
                 <button
@@ -159,7 +196,7 @@ function Dashboard({
                 <button
                   onClick={() => {
                     if (newFieldName || newFieldValue) {
-                      alert('Please make sure to Add or Discard new field first!')
+                      alert("Please make sure to Add or Discard new field first!");
                     } else {
                       savePassword(extraFields);
                       setExtraFields({});
@@ -184,26 +221,57 @@ function Dashboard({
             <ul className="divide-y divide-gray-200">
               {credentials.length > 0 ? (
                 <div>
-                  {credentials.map((password, index) => (
+                  {credentials.map((credential, index) => (
                     <div
+                      className="credential-container"
                       key={index}
                       style={styles.faqItem}
                     >
                       <div
+                        className="credential-header"
                         onClick={() => toggleExpand(index)}
                         style={styles.question}
                       >
-                        {password.service}
-                        <span style={styles.arrow}>{openIndex === index ? "▼" : "▶"}</span>
+                        {credential.service}
+                        <span style={styles.arrow}>
+                          <i
+                            className={`bi bi-caret-${
+                              openIndex === index ? "down" : "right"
+                            }-fill`}
+                          ></i>
+                        </span>
                       </div>
                       {openIndex === index && (
                         <div style={styles.answer}>
-                          {Object.entries(password).map(([key, value]) => (
-                            <div key={key} style={styles.creds}>
-                              <div>{key !== 'service' && key !== 'id' && key}</div>
-                              <div>{key !== 'service' && key !== 'id' && (key == 'password' ? decryptPassword(value) : value)}</div>
+                          {Object.entries(credential).map(([key, value]) =>
+                            !reservedKeywords.includes(key) || key === "password" ? (
+                              <div
+                                key={key}
+                                className="flex justify-between"
+                              >
+                                <div>{key}</div>
+                                <div>
+                                  {key === "password"
+                                    ? decryptPassword(value)
+                                    : value}
+                                </div>
+                              </div>
+                            ) : null
+                          )}
+                          <div className="meta-info justify-between">
+                            <div className="create-info font-light text-sm flex justify-between">
+                              created at{" "}
+                              <span className="italic ">
+                                {getDateAndTime(credential.createdAt)}
+                              </span>
                             </div>
-                          ))}
+                            <div className="update-info font-light text-sm flex justify-between">
+                              updated at{" "}
+                              <span className="italic ">
+                                {getDateAndTime(credential.updatedAt)}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -221,23 +289,13 @@ function Dashboard({
 }
 
 const styles = {
-  container: {
-    width: "600px",
-    margin: "0 auto",
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: "20px",
-    fontSize: "24px",
-  },
   faqItem: {
     marginBottom: "10px",
     cursor: "pointer",
   },
   question: {
-    fontSize: "18px",
+    // fontSize: "18px",
+    // fontFamily: 'Roboto',
     padding: "10px",
     backgroundColor: "#f7f7f7",
     border: "1px solid #ddd",
@@ -245,8 +303,8 @@ const styles = {
     justifyContent: "space-between",
   },
   answer: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
     padding: "10px",
     backgroundColor: "#fafafa",
     borderLeft: "1px solid #ddd",
@@ -257,11 +315,6 @@ const styles = {
   arrow: {
     fontSize: "18px",
   },
-  creds: {
-    display: "flex",
-    justifyContent: 'space-between'
-  },
 };
-
 
 export default Dashboard;
