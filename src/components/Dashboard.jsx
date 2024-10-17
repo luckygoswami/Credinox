@@ -11,7 +11,7 @@ function Dashboard({
   newPassword,
   setNewPassword,
   savePassword,
-  passwords,
+  credentials,
   decryptPassword,
   handleDelete,
   handleUpdate,
@@ -19,6 +19,11 @@ function Dashboard({
   const [passVisibility, setPassVisibility] = useState(false);
   const { currentCredential, setCurrentCredential } = useContext(UserContext);
   const passRefs = useRef([]);
+  const [openIndex, setOpenIndex] = useState(null);
+  const [newField, setNewField] = useState(false)
+  const [newFieldName, setNewFieldName] = useState(null)
+  const [newFieldValue, setNewFieldValue] = useState(null)
+  const [extraFields, setExtraFields] = useState({})
 
   const handleCopy = (index) => {
     const passwordElement = passRefs.current[index]; // Get the corresponding password element using the index.
@@ -40,6 +45,26 @@ function Dashboard({
     }, 2000);
   };
 
+  const addField = () => {
+    !newFieldName || !newFieldValue ? alert('Cannot leave New Field Name or Value empty before saving!') : (() => {
+      extraFields[newFieldName] = newFieldValue;
+      setNewField(false)
+      setNewFieldName(null);
+      setNewFieldValue(null);
+    })();
+  }
+
+  const createDiscardField = () => {
+    setNewField((prev) => !prev);
+    setNewFieldName(null);
+    setNewFieldValue(null);
+  }
+
+  // Function to toggle open/close of a credential
+  const toggleExpand = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   const editCredFormProps = {
     handleUpdate,
     decryptPassword,
@@ -47,7 +72,7 @@ function Dashboard({
 
   // Event handler for keydown
   const handleKeyDown = (e) => {
-    e.key === 'Enter' && savePassword();
+    e.key === 'Enter' && savePassword(extraFields);
   };
 
   useEffect(() => {
@@ -76,7 +101,7 @@ function Dashboard({
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${passwords.length > 0 ? "sm:pr-1" : "sm:pr-5"
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
             }`}
         >
           {/* New credential */}
@@ -84,7 +109,7 @@ function Dashboard({
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               Save a New Credential
             </h3>
-            <div className="flex flex-col gap-4">
+            <div className="fields-container flex flex-col gap-4">
               <input
                 id="new-service"
                 type="text"
@@ -99,12 +124,52 @@ function Dashboard({
                 passVisibility={passVisibility}
                 setPassVisibility={setPassVisibility}
               />
-              <button
-                onClick={savePassword}
-                className="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
-              >
-                Save Credential
-              </button>
+
+              {/* Dynamically add new created fields */}
+              {Object.entries(extraFields).map(([key, value]) => (
+                <div key={key} className="flex gap-2">
+                  <input type="text" readOnly value={key} className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="text" readOnly value={value} className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              ))}
+
+              {/* New field fields */}
+              {newField && <div className="flex flex-col gap-2 sm:flex-row">
+                <input type="text"
+                  placeholder="New field type or name"
+                  onChange={(e) => setNewFieldName(e.target.value)}
+                  className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="text"
+                  placeholder="New field value"
+                  onChange={(e) => setNewFieldValue(e.target.value)}
+                  className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <button onClick={addField}
+                  className="addField-btn grow px-4 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
+                >Add
+                </button>
+              </div>}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={createDiscardField}
+                  className="create-discard-btn grow px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
+                >
+                  {newField ? `Discard new field` : `Create new field`}
+                </button>
+                <button
+                  onClick={() => {
+                    if (newFieldName || newFieldValue) {
+                      alert('Please make sure to Add or Discard new field first!')
+                    } else {
+                      savePassword(extraFields);
+                      setExtraFields({});
+                    }
+                  }}
+                  className="grow px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-200"
+                >
+                  Save Credential
+                </button>
+              </div>
             </div>
           </div>
 
@@ -117,47 +182,33 @@ function Dashboard({
               Your Saved Credentials
             </h3>
             <ul className="divide-y divide-gray-200">
-              {passwords.length > 0 ? (
-                passwords.map((password, index) => (
-                  <li
-                    key={password.id}
-                    className={`py-4 flex justify-between max-w-[100%] gap-2 overflow-hidden p-4`}
-                  >
-                    <span className="font-medium text-gray-800 max-w-[50%]">
-                      {password.service}
-                    </span>
-                    <span className="cred-data flex justify-end overflow-hidden">
-                      <span
-                        className="password-container text-gray-600 break-words whitespace-normal inline-block w-full text-end"
-                        ref={(el) => (passRefs.current[index] = el)}
+              {credentials.length > 0 ? (
+                <div>
+                  {credentials.map((password, index) => (
+                    <div
+                      key={index}
+                      style={styles.faqItem}
+                    >
+                      <div
+                        onClick={() => toggleExpand(index)}
+                        style={styles.question}
                       >
-                        {decryptPassword(password.password)}
-                      </span>
-                      <span className="flex justify-evenly gap-3 mx-2 cred-ops">
-                        <button
-                          className="copy-btn"
-                          onClick={() => handleCopy(index)}
-                        >
-                          <i className="bi bi-copy"></i>
-                        </button>
-                        <button
-                          onClick={() => setCurrentCredential(password)}
-                          className="edit-btn"
-                        >
-                          <i className="bi bi-pencil-square"></i>
-                        </button>
-                        {!currentCredential?.id && (
-                          <button
-                            onClick={() => handleDelete(password.id)}
-                            className="dlt-btn"
-                          >
-                            <i className="bi bi-trash3-fill"></i>
-                          </button>
-                        )}
-                      </span>
-                    </span>
-                  </li>
-                ))
+                        {password.service}
+                        <span style={styles.arrow}>{openIndex === index ? "▼" : "▶"}</span>
+                      </div>
+                      {openIndex === index && (
+                        <div style={styles.answer}>
+                          {Object.entries(password).map(([key, value]) => (
+                            <div key={key} style={styles.creds}>
+                              <div>{key !== 'service' && key !== 'id' && key}</div>
+                              <div>{key !== 'service' && key !== 'id' && (key == 'password' ? decryptPassword(value) : value)}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <p className="text-gray-500">No saved credentials yet.</p>
               )}
@@ -168,5 +219,49 @@ function Dashboard({
     </div>
   );
 }
+
+const styles = {
+  container: {
+    width: "600px",
+    margin: "0 auto",
+    padding: "20px",
+    fontFamily: "Arial, sans-serif",
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: "20px",
+    fontSize: "24px",
+  },
+  faqItem: {
+    marginBottom: "10px",
+    cursor: "pointer",
+  },
+  question: {
+    fontSize: "18px",
+    padding: "10px",
+    backgroundColor: "#f7f7f7",
+    border: "1px solid #ddd",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  answer: {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: "10px",
+    backgroundColor: "#fafafa",
+    borderLeft: "1px solid #ddd",
+    borderRight: "1px solid #ddd",
+    borderBottom: "1px solid #ddd",
+    marginTop: "-1px",
+  },
+  arrow: {
+    fontSize: "18px",
+  },
+  creds: {
+    display: "flex",
+    justifyContent: 'space-between'
+  },
+};
+
 
 export default Dashboard;

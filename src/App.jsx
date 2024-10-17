@@ -21,12 +21,12 @@ import AuthForm from "./components/AuthForm";
 import PasswordGenerator from "./components/PasswordGenerator";
 import UserContext from "./context/UserContext";
 
-const SESSION_TIMEOUT = 60 * 60 * 1000; // 60 minutes in milliseconds
+const SESSION_TIMEOUT = 60 * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function App() {
   const [user, setUser] = useState(null);
-  const [passwords, setPasswords] = useState([]);
+  const [credentials, setCredentials] = useState([]);
   const [newPassword, setNewPassword] = useState("");
   const [service, setService] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -105,35 +105,41 @@ function App() {
   };
 
   const handleLogout = async () => {
-    setPasswords([]);
+    setCredentials([]);
     await signOut(auth);
     localStorage.removeItem("credinoxLastLoginTime");
     setUserPassword("");
   };
 
-  const savePassword = async () => {
-    try {
-      const encryptedPassword = encryptPassword(newPassword);
+  const savePassword = async (extraFields = null) => {
+    if (!service) {
+      alert('Cannot leave the Service Name field empty')
+    } else {
+      try {
+        const encryptedPassword = encryptPassword(newPassword);
 
-      // Adding document in Firestore
-      await addDoc(collection(db, "users", user.uid, "passwords"), {
-        service: service,
-        password: encryptedPassword,
-      });
+        // Adding document in Firestore
+        await addDoc(collection(db, "users", user.uid, "credentials"), {
+          service: service,
+          password: encryptedPassword,
+          ...extraFields,
+        });
 
-      setService("");
-      setNewPassword("");
-      fetchPasswords();
-    } catch (error) {
-      console.error("Error saving credential", error);
-      alert(error.message);
+        setService("");
+        setNewPassword("");
+        fetchPasswords();
+      } catch (error) {
+        console.error("Error saving credential", error);
+        alert(error.message);
+      }
     }
+
   };
 
   const handleDelete = async (passwordId) => {
     try {
       // Delete the document in Firestore
-      await deleteDoc(doc(db, "users", user.uid, "passwords", passwordId));
+      await deleteDoc(doc(db, "users", user.uid, "credentials", passwordId));
       await fetchPasswords();
 
       setTimeout(() => {
@@ -148,7 +154,7 @@ function App() {
   const handleUpdate = async (credentialId, updatedService, updatedPassword) => {
     try {
       const encryptedPassword = encryptPassword(updatedPassword);
-      const credentialRef = doc(db, "users", user.uid, "passwords", credentialId);
+      const credentialRef = doc(db, "users", user.uid, "credentials", credentialId);
 
       // Update the document in Firestore
       await updateDoc(credentialRef, {
@@ -170,13 +176,13 @@ function App() {
 
   const fetchPasswords = async () => {
     const querySnapshot = await getDocs(
-      collection(db, "users", user.uid, "passwords")
+      collection(db, "users", user.uid, "credentials")
     );
     const passwordList = [];
     querySnapshot.forEach((doc) => {
       passwordList.push({ id: doc.id, ...doc.data() });
     });
-    setPasswords(passwordList);
+    setCredentials(passwordList);
   };
 
   const DashboardProps = {
@@ -187,7 +193,7 @@ function App() {
     newPassword,
     setNewPassword,
     savePassword,
-    passwords,
+    credentials,
     decryptPassword,
     handleDelete,
     handleUpdate,
