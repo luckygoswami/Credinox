@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 import EditCredentialForm from "./EditCredentialForm";
 import UserContext from "../context/UserContext";
+
 const reservedKeywords = ["id", "service", "password", "createdAt", "updatedAt"];
 const getDateAndTime = (timestamp) => {
   const dateAndTime = new Date(timestamp);
@@ -56,17 +57,17 @@ function Dashboard({
     !newFieldName || !newFieldValue
       ? alert("Cannot leave New Field Name or Value empty before saving!")
       : (() => {
-          if (reservedKeywords.includes(newFieldName)) {
-            alert(
-              `${newFieldName} is a reserved keyword, choose another name for the new field`
-            );
-          } else {
-            extraFields[newFieldName] = newFieldValue;
-            setNewField(false);
-            setNewFieldName(null);
-            setNewFieldValue(null);
-          }
-        })();
+        if (reservedKeywords.includes(newFieldName)) {
+          alert(
+            `${newFieldName} is a reserved keyword, choose another name for the new field`
+          );
+        } else {
+          extraFields[newFieldName] = newFieldValue;
+          setNewField(false);
+          setNewFieldName(null);
+          setNewFieldValue(null);
+        }
+      })();
   };
 
   const createDiscardField = () => {
@@ -116,9 +117,8 @@ function Dashboard({
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
-            credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
-          }`}
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
+            }`}
         >
           {/* New credential */}
           <div className="mb-6">
@@ -223,26 +223,26 @@ function Dashboard({
                 <div>
                   {credentials.map((credential, index) => (
                     <div
-                      className="credential-container"
+                      className="credential-container mb-2 cursor-pointer"
                       key={index}
-                      style={styles.faqItem}
                     >
                       <div
-                        className="credential-header"
+                        className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
+                            ? "rounded-tl-md rounded-tr-md"
+                            : "rounded-md"
+                          } `}
                         onClick={() => toggleExpand(index)}
-                        style={styles.question}
                       >
                         {credential.service}
-                        <span style={styles.arrow}>
+                        <span>
                           <i
-                            className={`bi bi-caret-${
-                              openIndex === index ? "down" : "right"
-                            }-fill`}
+                            className={`bi bi-caret-${openIndex === index ? "down" : "right"
+                              }-fill`}
                           ></i>
                         </span>
                       </div>
                       {openIndex === index && (
-                        <div style={styles.answer}>
+                        <div className="flex flex-col p-2 mt-[-1px] bg-white border-l border-r border-b border-gray-300 rounded-bl-md rounded-br-md">
                           {Object.entries(credential).map(([key, value]) =>
                             !reservedKeywords.includes(key) || key === "password" ? (
                               <div
@@ -287,34 +287,5 @@ function Dashboard({
     </div>
   );
 }
-
-const styles = {
-  faqItem: {
-    marginBottom: "10px",
-    cursor: "pointer",
-  },
-  question: {
-    // fontSize: "18px",
-    // fontFamily: 'Roboto',
-    padding: "10px",
-    backgroundColor: "#f7f7f7",
-    border: "1px solid #ddd",
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  answer: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "10px",
-    backgroundColor: "#fafafa",
-    borderLeft: "1px solid #ddd",
-    borderRight: "1px solid #ddd",
-    borderBottom: "1px solid #ddd",
-    marginTop: "-1px",
-  },
-  arrow: {
-    fontSize: "18px",
-  },
-};
 
 export default Dashboard;
