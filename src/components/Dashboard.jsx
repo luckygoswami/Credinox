@@ -228,13 +228,22 @@ function Dashboard({
                     >
                       <div
                         className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
-                            ? "rounded-tl-md rounded-tr-md"
-                            : "rounded-md"
+                          ? "rounded-tl-md rounded-tr-md"
+                          : "rounded-md"
                           } `}
-                        onClick={() => toggleExpand(index)}
+                        onClick={(e) => e.target.tagName === 'DIV' ? toggleExpand(index) : null}
                       >
                         {credential.service}
-                        <span>
+                        <span className="cred-ops">
+                          <button
+                            onClick={() => {
+                              setOpenIndex(null)
+                              handleDelete(credential.id, credential.service)
+                            }}
+                            id="dlt-btn"
+                          >
+                            <i className="bi bi-trash3-fill"></i>
+                          </button>
                           <i
                             className={`bi bi-caret-${openIndex === index ? "down" : "right"
                               }-fill`}

@@ -137,18 +137,28 @@ function App() {
     }
   };
 
-  const handleDelete = async (passwordId) => {
-    try {
-      // Delete the document in Firestore
-      await deleteDoc(doc(db, "users", user.uid, "credentials", passwordId));
-      await fetchPasswords();
+  const handleDelete = async (credentialId, credentialName) => {
+    // Display confirmation prompt to the user
+    const confirmDelete = window.confirm(`Are you sure you want to delete '${credentialName}' credentials?`);
 
-      setTimeout(() => {
-        alert("credential deleted successfully");
-      }, 100);
-    } catch (error) {
-      console.error("Error deleting credential", error);
-      alert(error.message);
+    // Proceed only if the user confirms
+    if (confirmDelete) {
+      try {
+        // Delete the document in Firestore
+        await deleteDoc(doc(db, "users", user.uid, "credentials", credentialId));
+        await fetchPasswords();
+
+        // A slight delay before showing the success message
+        setTimeout(() => {
+          alert("Credential deleted successfully");
+        }, 100);
+      } catch (error) {
+        console.error("Error deleting credential", error);
+        alert(error.message);
+      }
+    } else {
+      // If user cancels, do nothing or show a message if needed
+      console.log("Credential deletion canceled");
     }
   };
 
