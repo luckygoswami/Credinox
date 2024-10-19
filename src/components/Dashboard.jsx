@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PasswordWrapper from "./PasswordWrapper";
 import EditCredentialForm from "./EditCredentialForm";
 import UserContext from "../context/UserContext";
@@ -26,28 +26,24 @@ function Dashboard({
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
   const { currentCredential, setCurrentCredential } = useContext(UserContext);
-  const passRefs = useRef([]);
   const [openIndex, setOpenIndex] = useState(null);
   const [newField, setNewField] = useState(false);
   const [newFieldName, setNewFieldName] = useState(null);
   const [newFieldValue, setNewFieldValue] = useState(null);
   const [extraFields, setExtraFields] = useState({});
 
-  const handleCopy = (index) => {
-    const passwordElement = passRefs.current[index]; // Get the corresponding password element using the index.
-    const range = document.createRange(); // Create a range to select the text content.
-    range.selectNodeContents(passwordElement); // Select the contents of the password element.
-
-    // Clear any existing selections
+  const handleCopy = (contentDiv) => {
+    // Create a range and select the text
+    const range = document.createRange();
+    range.selectNodeContents(contentDiv); // Select the contents of the div
     const selection = window.getSelection();
-    selection.removeAllRanges();
+    selection.removeAllRanges(); // Clear existing selections
+    selection.addRange(range); // Add the new range
 
-    // Select the text inside the range (password text)
-    selection.addRange(range);
+    // Copy the selected text to clipboard
+    window.navigator.clipboard.writeText(contentDiv.textContent);
 
-    // Copy the selected text to the clipboard
-    window.navigator.clipboard.writeText(passwordElement.textContent);
-
+    // Clear the selection after 2s
     setTimeout(() => {
       selection.removeAllRanges();
     }, 2000);
@@ -228,17 +224,19 @@ function Dashboard({
                     >
                       <div
                         className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
-                          ? "rounded-tl-md rounded-tr-md"
-                          : "rounded-md"
+                            ? "rounded-tl-md rounded-tr-md"
+                            : "rounded-md"
                           } `}
-                        onClick={(e) => e.target.tagName === 'DIV' ? toggleExpand(index) : null}
+                        onClick={(e) =>
+                          e.target.tagName === "DIV" ? toggleExpand(index) : null
+                        }
                       >
                         {credential.service}
                         <span className="cred-ops">
                           <button
                             onClick={() => {
-                              setOpenIndex(null)
-                              handleDelete(credential.id, credential.service)
+                              setOpenIndex(null);
+                              handleDelete(credential.id, credential.service);
                             }}
                             id="dlt-btn"
                           >
@@ -256,13 +254,25 @@ function Dashboard({
                             !reservedKeywords.includes(key) || key === "password" ? (
                               <div
                                 key={key}
-                                className="flex justify-between"
+                                className="cred-container flex justify-between"
                               >
-                                <div>{key}</div>
-                                <div>
-                                  {key === "password"
-                                    ? decryptPassword(value)
-                                    : value}
+                                <div className="cred-key">{key}</div>
+                                <div className="flex">
+                                  <div className="cred-value">
+                                    {key === "password"
+                                      ? decryptPassword(value)
+                                      : value}
+                                  </div>
+                                  <button
+                                    className="copy-btn mx-2"
+                                    onClick={(e) => {
+                                      handleCopy(
+                                        e.currentTarget.previousElementSibling
+                                      );
+                                    }}
+                                  >
+                                    <i className="bi bi-copy"></i>
+                                  </button>
                                 </div>
                               </div>
                             ) : null
