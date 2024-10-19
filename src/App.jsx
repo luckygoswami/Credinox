@@ -139,7 +139,9 @@ function App() {
 
   const handleDelete = async (credentialId, credentialName) => {
     // Display confirmation prompt to the user
-    const confirmDelete = window.confirm(`Are you sure you want to delete '${credentialName}' credentials?`);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete '${credentialName}' credentials?`
+    );
 
     // Proceed only if the user confirms
     if (confirmDelete) {
@@ -147,11 +149,6 @@ function App() {
         // Delete the document in Firestore
         await deleteDoc(doc(db, "users", user.uid, "credentials", credentialId));
         await fetchPasswords();
-
-        // A slight delay before showing the success message
-        setTimeout(() => {
-          alert("Credential deleted successfully");
-        }, 100);
       } catch (error) {
         console.error("Error deleting credential", error);
         alert(error.message);

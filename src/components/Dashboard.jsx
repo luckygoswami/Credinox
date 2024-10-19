@@ -66,7 +66,7 @@ function Dashboard({
       })();
   };
 
-  const createDiscardField = () => {
+  const createDiscardToggle = () => {
     setNewField((prev) => !prev);
     setNewFieldName(null);
     setNewFieldValue(null);
@@ -97,6 +97,11 @@ function Dashboard({
     };
   }, [service, newPassword]);
 
+  // To add focus to the new field after clicking create new field btn
+  useEffect(() => {
+    newField ? document.getElementById('new-field-name').focus() : null;
+  }, [newField])
+
   return (
     <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">
       <div className="flex flex-col bg-white rounded-lg overflow-hidden h-[100%] shadow-lg">
@@ -104,6 +109,7 @@ function Dashboard({
         <div className="user-info flex justify-between items-center p-3">
           <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
           <button
+            id="logout-btn"
             onClick={handleLogout}
             className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
           >
@@ -146,12 +152,14 @@ function Dashboard({
                   <input
                     type="text"
                     readOnly
+                    tabIndex={-1}
                     value={key}
                     className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
                     type="text"
                     readOnly
+                    tabIndex={-1}
                     value={value}
                     className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -162,12 +170,14 @@ function Dashboard({
               {newField && (
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <input
+                    id="new-field-name"
                     type="text"
                     placeholder="New field type or name"
                     onChange={(e) => setNewFieldName(e.target.value)}
                     className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <input
+                    id="new-field-value"
                     type="text"
                     placeholder="New field value"
                     onChange={(e) => setNewFieldValue(e.target.value)}
@@ -184,7 +194,7 @@ function Dashboard({
 
               <div className="flex gap-2">
                 <button
-                  onClick={createDiscardField}
+                  onClick={createDiscardToggle}
                   className="create-discard-btn grow px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
                 >
                   {newField ? `Discard new field` : `Create new field`}
@@ -224,8 +234,8 @@ function Dashboard({
                     >
                       <div
                         className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
-                            ? "rounded-tl-md rounded-tr-md"
-                            : "rounded-md"
+                          ? "rounded-tl-md rounded-tr-md"
+                          : "rounded-md"
                           } `}
                         onClick={(e) =>
                           e.target.tagName === "DIV" ? toggleExpand(index) : null
