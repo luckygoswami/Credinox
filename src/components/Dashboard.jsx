@@ -32,6 +32,15 @@ function Dashboard({
   const [newFieldValue, setNewFieldValue] = useState(null);
   const [extraFields, setExtraFields] = useState({});
 
+  const handleSave = () => {
+    if (newFieldName || newFieldValue) {
+      alert("Please make sure to Add or Discard new field first!");
+    } else {
+      savePassword(extraFields);
+      setExtraFields({});
+    }
+  }
+
   const handleCopy = (contentDiv) => {
     // Create a range and select the text
     const range = document.createRange();
@@ -99,7 +108,7 @@ function Dashboard({
 
   // To add focus to the new field after clicking create new field btn
   useEffect(() => {
-    newField ? document.getElementById('new-field-name').focus() : null;
+    newField && document.getElementById('new-field-name').focus();
   }, [newField])
 
   return (
@@ -200,14 +209,7 @@ function Dashboard({
                   {newField ? `Discard new field` : `Create new field`}
                 </button>
                 <button
-                  onClick={() => {
-                    if (newFieldName || newFieldValue) {
-                      alert("Please make sure to Add or Discard new field first!");
-                    } else {
-                      savePassword(extraFields);
-                      setExtraFields({});
-                    }
-                  }}
+                  onClick={handleSave}
                   className="grow px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-200"
                 >
                   Save Credential
@@ -238,7 +240,7 @@ function Dashboard({
                           : "rounded-md"
                           } `}
                         onClick={(e) =>
-                          e.target.tagName === "DIV" ? toggleExpand(index) : null
+                          e.target.tagName === "DIV" && toggleExpand(index)
                         }
                       >
                         {credential.service}
@@ -261,7 +263,7 @@ function Dashboard({
                       {openIndex === index && (
                         <div className="flex flex-col p-2 mt-[-1px] bg-white border-l border-r border-b border-gray-300 rounded-bl-md rounded-br-md">
                           {Object.entries(credential).map(([key, value]) =>
-                            !reservedKeywords.includes(key) || key === "password" ? (
+                            (!reservedKeywords.includes(key) || key === "password") && (
                               <div
                                 key={key}
                                 className="cred-container flex justify-between"
@@ -285,7 +287,7 @@ function Dashboard({
                                   </button>
                                 </div>
                               </div>
-                            ) : null
+                            )
                           )}
                           <div className="meta-info justify-between">
                             <div className="create-info font-light text-sm flex justify-between">
