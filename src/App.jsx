@@ -9,7 +9,7 @@ import {
 import {
   collection,
   doc,
-  updateDoc,
+  setDoc,
   addDoc,
   getDocs,
   deleteDoc,
@@ -159,16 +159,13 @@ function App() {
     }
   };
 
-  const handleUpdate = async (credentialId, updatedService, updatedPassword) => {
+  const handleUpdate = async (credentialId, newCredObj) => {
     try {
-      const encryptedPassword = encryptPassword(updatedPassword);
       const credentialRef = doc(db, "users", user.uid, "credentials", credentialId);
 
       // Update the document in Firestore
-      await updateDoc(credentialRef, {
-        service: updatedService,
-        password: encryptedPassword,
-        updatedAt: Date.now(),
+      await setDoc(credentialRef, {
+        ...newCredObj,
       });
 
       await fetchPasswords();
@@ -203,6 +200,7 @@ function App() {
     setNewPassword,
     savePassword,
     credentials,
+    encryptPassword,
     decryptPassword,
     handleDelete,
     handleUpdate,
