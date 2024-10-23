@@ -93,8 +93,11 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
 
   return (
     <div className="edit-form mb-3">
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-        Update&nbsp;<span className="text-2xl">{currentCredential.service}'s</span>
+      <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300 mb-2">
+        Update&nbsp;
+        <span className="text-2xl text-indigo-600 transition duration-300 dark:text-indigo-400">
+          {currentCredential.service}'s
+        </span>
         &nbsp;credentials
       </h3>
       <div className="field-operations flex gap-2 flex-col">
@@ -112,14 +115,14 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
                     value={key}
                     readOnly
                     tabIndex={-1}
-                    className="grow p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="grow p-2 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200"
                   />
                   <input
                     type="text"
                     placeholder="Field value"
                     value={value}
                     onChange={(e) => handleValueChange(key, e.target.value)}
-                    className="grow p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="grow p-2 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200"
                   />
                   <button
                     onClick={() => handleDeleteField(key)}
@@ -138,18 +141,18 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
               type="text"
               placeholder="New field type or name"
               onChange={(e) => setNewFieldName(e.target.value)}
-              className="grow p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="grow p-2 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200"
             />
             <input
               id="new-field-value"
               type="text"
               placeholder="New field value"
               onChange={(e) => setNewFieldValue(e.target.value)}
-              className="grow p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="grow p-2 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200"
             />
             <button
               onClick={addField}
-              className="addField-btn grow px-1 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
+              className="addField-btn grow px-3 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
             >
               Add
             </button>

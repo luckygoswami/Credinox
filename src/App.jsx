@@ -31,6 +31,7 @@ function App() {
   const [service, setService] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   const { setCurrentCredential } = useContext(UserContext);
 
@@ -187,6 +188,11 @@ function App() {
     setCredentials(passwordList);
   };
 
+  const toggleTheme = () => {
+    setDarkMode((prev) => !prev);
+    document.querySelector("html").classList.toggle("dark");
+  };
+
   const DashboardProps = {
     user,
     handleLogout,
@@ -212,10 +218,20 @@ function App() {
   };
 
   return (
-    <div className="sm:h-screen bg-gray-50 grid grid-rows-[auto_1fr_auto]">
-      <header className=" bg-[#0278ff] py-4 shadow-md">
+    <div className="sm:h-screen bg-gray-50 transition duration-300 dark:bg-gray-900 grid grid-rows-[auto_1fr_auto]">
+      <header className="bg-indigo-500 transition duration-300 dark:bg-indigo-700 py-4 shadow-md">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-bold text-white">Credinox</h1>
+          <h1 className="text-3xl font-bold text-white">
+            Credinox&nbsp;
+            <button
+              id="theme-btn"
+              onClick={toggleTheme}
+            >
+              <i
+                className={`text-2xl bi bi-${darkMode ? "moon-stars" : "sun"}-fill`}
+              ></i>
+            </button>
+          </h1>
           <p className="text-white text-lg">Your Credentials Manager</p>
         </div>
       </header>
@@ -225,14 +241,15 @@ function App() {
         <PasswordGenerator />
       </main>
 
-      <footer className="bg-gray-800 py-4">
-        <div className="container mx-auto text-center text-gray-400">
+      <footer className="bg-gray-800 transition duration-300 dark:bg-gray-700 py-4">
+        <div className="container mx-auto text-center text-gray-400 transition duration-300 dark:text-gray-300">
           &copy; {new Date().getFullYear()} Credinox. All rights reserved. <br />
           Powered by{" "}
           <a
             href="https://github.com/Luckygoswami"
             target="_blank"
             rel="noopener noreferrer"
+            className="text-indigo-400 transition duration-300 dark:text-indigo-300 hover:underline"
           >
             Lucky Goswami
           </a>

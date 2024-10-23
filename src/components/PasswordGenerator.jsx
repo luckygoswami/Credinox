@@ -14,11 +14,10 @@ function PasswordGenerator() {
     let pass = "";
     let str = "";
 
-    if (uppercaseAllowed) str += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (lowercaseAllowed) str += 'abcdefghijklmnopqrstuvwxyz';
+    if (uppercaseAllowed) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (lowercaseAllowed) str += "abcdefghijklmnopqrstuvwxyz";
     if (numberAllowed) str += "0123456789";
-    // if (charAllowed) str += '!@#$%^&*()-_=+[]{}|;:",.<>?/~`';
-    if (charAllowed) str += '!@#$%&*_';
+    if (charAllowed) str += "!@#$%&*_";
 
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1);
@@ -26,7 +25,14 @@ function PasswordGenerator() {
     }
 
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed, uppercaseAllowed, lowercaseAllowed, setPassword]);
+  }, [
+    length,
+    numberAllowed,
+    charAllowed,
+    uppercaseAllowed,
+    lowercaseAllowed,
+    setPassword,
+  ]);
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
@@ -35,36 +41,45 @@ function PasswordGenerator() {
 
   useEffect(() => {
     passwordGenerator();
-  }, [length, charAllowed, numberAllowed, uppercaseAllowed, lowercaseAllowed, passwordGenerator]);
+  }, [
+    length,
+    charAllowed,
+    numberAllowed,
+    uppercaseAllowed,
+    lowercaseAllowed,
+    passwordGenerator,
+  ]);
 
   return (
     <div className="w-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto flex justify-center">
-      <div className="w-full h-full pt-5 pb-3 px-5 flex flex-col justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-gray-800 overflow-auto">
+      <div className="w-full h-full pt-5 pb-3 px-5 flex flex-col justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-white transition duration-300 dark:bg-gray-800 dark:text-orange-500 overflow-auto">
         {/* Header */}
-        <h1 className="text-white text-center text-lg font-semibold">🔐 Random Password Generator</h1>
+        <h1 className="text-center text-lg font-semibold text-gray-700 transition duration-300 dark:text-white">
+          🔐 Random Password Generator
+        </h1>
 
-        {/* Password Field */}
-        <div className="password-input flex items-center rounded-lg overflow-hidden border-2 border-gray-600 bg-gray-900">
+        {/* Password Display Section */}
+        <div className="password-input flex items-center rounded-lg overflow-hidden border-2 border-gray-300 transition duration-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-900">
           <input
             type="text"
             value={password}
-            className="outline-none w-full py-2 px-4 bg-gray-900 text-gray-300"
+            className="outline-none w-full py-2 px-4 bg-gray-100 transition duration-300 dark:bg-gray-900 text-gray-700 dark:text-gray-300"
             placeholder="Generated Password"
             readOnly
             ref={passwordRef}
           />
           <button
             onClick={copyPasswordToClipboard}
-            className="outline-none bg-blue-700 hover:bg-blue-600 transition text-white px-4 py-2 font-medium shrink-0"
+            className="bg-blue-500 hover:bg-blue-400 transition duration-300 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-4 py-2 font-medium shrink-0"
           >
             Copy
           </button>
         </div>
 
         {/* Password Options */}
-        <div className="password-options flex flex-col text-sm gap-y-4 text-gray-300">
-          {/* Length Slider */}
-          <div className="flex items-center justify-between  gap-x-2">
+        <div className="password-options flex flex-col text-sm gap-y-4 text-gray-700 transition duration-300 dark:text-gray-300">
+          {/* Password Length */}
+          <div className="flex items-center justify-between gap-x-2">
             <label className="flex items-center gap-x-2 w-full">
               <span>Length:</span>
               <input
@@ -72,59 +87,79 @@ function PasswordGenerator() {
                 min={6}
                 max={32}
                 value={length}
-                className="cursor-pointer accent-orange-500 w-[100%]"
+                className="cursor-pointer accent-orange-500 w-full"
                 onChange={(e) => setLength(e.target.value)}
               />
             </label>
             <span className="font-semibold">{length}</span>
           </div>
 
-          {/* Numbers Toggle */}
+          {/* Toggle for including numbers */}
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              defaultChecked={numberAllowed}
+              checked={numberAllowed}
               id="numberInput"
               className="accent-orange-500 cursor-pointer"
-              onChange={() => setNumberAllowed((prev) => !prev)}
+              onChange={() => setNumberAllowed(!numberAllowed)}
             />
-            <label htmlFor="numberInput" className="cursor-pointer">Include Numbers ( 0-9 )</label>
+            <label
+              htmlFor="numberInput"
+              className="cursor-pointer"
+            >
+              Include Numbers (0-9)
+            </label>
           </div>
 
-          {/* Special Characters Toggle */}
+          {/* Toggle for including special characters */}
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              defaultChecked={charAllowed}
+              checked={charAllowed}
               id="charInput"
               className="accent-orange-500 cursor-pointer"
-              onChange={() => setCharAllowed((prev) => !prev)}
+              onChange={() => setCharAllowed(!charAllowed)}
             />
-            <label htmlFor="charInput" className="cursor-pointer">Include Special Characters ( !@#$%&*_ )</label>
+            <label
+              htmlFor="charInput"
+              className="cursor-pointer"
+            >
+              Include Special Characters (!@#$%&*_)
+            </label>
           </div>
 
-          {/* Uppercase Toggle */}
+          {/* Toggle for including uppercase letters */}
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              defaultChecked={uppercaseAllowed}
+              checked={uppercaseAllowed}
               id="uppercaseInput"
               className="accent-orange-500 cursor-pointer"
-              onChange={() => setUppercaseAllowed((prev) => !prev)}
+              onChange={() => setUppercaseAllowed(!uppercaseAllowed)}
             />
-            <label htmlFor="charInput" className="cursor-pointer">Include Uppercase Letters ( A-Z )</label>
+            <label
+              htmlFor="uppercaseInput"
+              className="cursor-pointer"
+            >
+              Include Uppercase Letters (A-Z)
+            </label>
           </div>
 
-          {/* Lowercase Toggle */}
+          {/* Toggle for including lowercase letters */}
           <div className="flex items-center gap-x-3">
             <input
               type="checkbox"
-              defaultChecked={lowercaseAllowed}
+              checked={lowercaseAllowed}
               id="lowercaseInput"
               className="accent-orange-500 cursor-pointer"
-              onChange={() => setLowercaseAllowed((prev) => !prev)}
+              onChange={() => setLowercaseAllowed(!lowercaseAllowed)}
             />
-            <label htmlFor="charInput" className="cursor-pointer">Include Lowercase Letters ( a-z )</label>
+            <label
+              htmlFor="lowercaseInput"
+              className="cursor-pointer"
+            >
+              Include Lowercase Letters (a-z)
+            </label>
           </div>
         </div>
 
@@ -137,7 +172,6 @@ function PasswordGenerator() {
         </button>
       </div>
     </div>
-
   );
 }
 

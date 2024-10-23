@@ -117,10 +117,12 @@ function Dashboard({
 
   return (
     <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">
-      <div className="flex flex-col bg-white rounded-lg overflow-hidden h-[100%] shadow-lg">
+      <div className="flex flex-col bg-white transition duration-300 dark:bg-gray-800 rounded-lg overflow-hidden h-[100%] shadow-lg">
         {/* Dashboard header */}
         <div className="user-info flex justify-between items-center p-3">
-          <h2 className="text-2xl font-bold text-gray-800">{user.email}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 transition duration-300 dark:text-gray-200">
+            {user.email}
+          </h2>
           <button
             id="logout-btn"
             onClick={handleLogout}
@@ -140,7 +142,7 @@ function Dashboard({
             <EditCredentialForm {...editCredFormProps} />
           ) : (
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300 mb-2">
                 Save a New Credential
               </h3>
               <div className="fields-container flex flex-col gap-4">
@@ -150,7 +152,7 @@ function Dashboard({
                   placeholder="Service Name"
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="p-3 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                 />
                 <PasswordWrapper
                   value={newPassword}
@@ -170,14 +172,14 @@ function Dashboard({
                       readOnly
                       tabIndex={-1}
                       value={key}
-                      className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="grow p-3 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                     />
                     <input
                       type="text"
                       readOnly
                       tabIndex={-1}
                       value={value}
-                      className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="grow p-3 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                     />
                   </div>
                 ))}
@@ -190,14 +192,14 @@ function Dashboard({
                       type="text"
                       placeholder="New field type or name"
                       onChange={(e) => setNewFieldName(e.target.value)}
-                      className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="grow p-3 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                     />
                     <input
                       id="new-field-value"
                       type="text"
                       placeholder="New field value"
                       onChange={(e) => setNewFieldValue(e.target.value)}
-                      className="grow p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="grow p-3 border border-gray-300 transition duration-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200"
                     />
                     <button
                       onClick={addField}
@@ -228,21 +230,21 @@ function Dashboard({
 
           {/* Saved credentials */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300 mb-2">
               Your Saved Credentials
             </h3>
-            <ul className="divide-y divide-gray-200">
+            <ul className="divide-y divide-gray-200 transition duration-300 dark:divide-gray-600">
               {credentials.length > 0 ? (
                 <div>
                   {credentials.map((credential, index) => (
                     <div
-                      className="credential-container mb-2 cursor-pointer"
+                      className="credential-container mb-2 cursor-pointer text-black dark:text-white"
                       key={index}
                     >
                       <div
-                        className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
-                            ? "rounded-tl-md rounded-tr-md"
-                            : "rounded-md"
+                        className={`credential-header p-2 flex justify-between bg-gray-100  transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${openIndex === index
+                          ? "rounded-tl-md rounded-tr-md"
+                          : "rounded-md"
                           } `}
                         onClick={(e) =>
                           e.target.tagName === "DIV" && toggleExpand(index)
@@ -250,7 +252,7 @@ function Dashboard({
                       >
                         <span>
                           {credential.service}{" "}
-                          {credential.user && `(${credential.user})`}
+                          {credential.user && `(${credential.user})` || credential.User && `(${credential.User})`}
                         </span>
                         <span className="cred-ops flex gap-2">
                           <button
@@ -279,7 +281,7 @@ function Dashboard({
                         </span>
                       </div>
                       {openIndex === index && (
-                        <div className="flex flex-col p-2 mt-[-1px] bg-white border-l border-r border-b border-gray-300 rounded-bl-md rounded-br-md">
+                        <div className="flex flex-col p-2 mt-[-1px] bg-white transition dark:bg-gray-800 border-l border-r border-b border-gray-300 duration-300 dark:border-gray-600 rounded-bl-md rounded-br-md">
                           {Object.entries(credential).map(
                             ([key, value]) =>
                               (!reservedKeywords.includes(key) ||
@@ -288,9 +290,11 @@ function Dashboard({
                                   key={key}
                                   className="cred-container flex justify-between"
                                 >
-                                  <div className="cred-key">{key}</div>
+                                  <div className="cred-key text-black transition duration-300 dark:text-gray-200">
+                                    {key}
+                                  </div>
                                   <div className="flex">
-                                    <div className="cred-value">
+                                    <div className="cred-value text-black transition duration-300 dark:text-gray-300">
                                       {key === "password"
                                         ? decryptPassword(value)
                                         : value}
@@ -329,7 +333,9 @@ function Dashboard({
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500">No saved credentials yet.</p>
+                <p className="text-gray-500 transition duration-300 dark:text-gray-400">
+                  No saved credentials yet.
+                </p>
               )}
             </ul>
           </div>
