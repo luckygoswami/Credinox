@@ -26,6 +26,7 @@ dist-ssr
 .firebase
 .env*
 tempfile.js
+z.*
 
 # Firebase files
 .firebaserc

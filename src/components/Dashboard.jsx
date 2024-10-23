@@ -34,8 +34,10 @@ function Dashboard({
   const [extraFields, setExtraFields] = useState({});
 
   const handleSave = () => {
-    if (newFieldName || newFieldValue) {
-      alert("Please make sure to Add or Discard new field first!");
+    if (!service) {
+      alert("Cannot leave the Service field empty"); // Check if the service field is empty
+    } else if (newFieldName || newFieldValue) {
+      alert("Please make sure to Add or Discard new field first!"); // Check if the new fields are empty
     } else {
       savePassword(extraFields);
       setExtraFields({});
@@ -61,19 +63,19 @@ function Dashboard({
 
   const addField = () => {
     !newFieldName || !newFieldValue
-      ? alert("Cannot leave New Field Name or Value empty before saving!")
+      ? alert("Cannot leave the New Field Name or Value empty before saving!")
       : (() => {
-          if (reservedKeywords.includes(newFieldName)) {
-            alert(
-              `${newFieldName} is a reserved keyword, choose another name for the new field`
-            );
-          } else {
-            extraFields[newFieldName] = newFieldValue;
-            setNewField(false);
-            setNewFieldName(null);
-            setNewFieldValue(null);
-          }
-        })();
+        if (reservedKeywords.includes(newFieldName)) {
+          alert(
+            `${newFieldName} is a reserved keyword, choose another name for the new field`
+          );
+        } else {
+          extraFields[newFieldName] = newFieldValue;
+          setNewField(false);
+          setNewFieldName(null);
+          setNewFieldValue(null);
+        }
+      })();
   };
 
   const createDiscardToggle = () => {
@@ -130,9 +132,8 @@ function Dashboard({
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
-            credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
-          }`}
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
+            }`}
         >
           {/* Create and Edit credential form */}
           {currentCredential?.id ? (
@@ -239,16 +240,18 @@ function Dashboard({
                       key={index}
                     >
                       <div
-                        className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${
-                          openIndex === index
+                        className={`credential-header p-2 flex justify-between bg-gray-100 border border-gray-300 ${openIndex === index
                             ? "rounded-tl-md rounded-tr-md"
                             : "rounded-md"
-                        } `}
+                          } `}
                         onClick={(e) =>
                           e.target.tagName === "DIV" && toggleExpand(index)
                         }
                       >
-                        {credential.service}
+                        <span>
+                          {credential.service}{" "}
+                          {credential.user && `(${credential.user})`}
+                        </span>
                         <span className="cred-ops flex gap-2">
                           <button
                             onClick={() => setCurrentCredential(credential)}
@@ -269,9 +272,8 @@ function Dashboard({
                           )}
                           <button>
                             <i
-                              className={`bi bi-caret-${
-                                openIndex === index ? "down" : "right"
-                              }-fill`}
+                              className={`bi bi-caret-${openIndex === index ? "down" : "right"
+                                }-fill`}
                             ></i>
                           </button>
                         </span>

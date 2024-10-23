@@ -112,28 +112,24 @@ function App() {
   };
 
   const savePassword = async (extraFields = null) => {
-    if (!service) {
-      alert("Cannot leave the Service Name field empty");
-    } else {
-      try {
-        const encryptedPassword = encryptPassword(newPassword);
+    try {
+      const encryptedPassword = encryptPassword(newPassword);
 
-        // Adding document in Firestore
-        await addDoc(collection(db, "users", user.uid, "credentials"), {
-          service: service,
-          password: encryptedPassword,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          ...extraFields,
-        });
+      // Adding document in Firestore
+      await addDoc(collection(db, "users", user.uid, "credentials"), {
+        service: service,
+        password: encryptedPassword,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        ...extraFields,
+      });
 
-        setService("");
-        setNewPassword("");
-        fetchPasswords();
-      } catch (error) {
-        console.error("Error saving credential", error);
-        alert(error.message);
-      }
+      setService("");
+      setNewPassword("");
+      fetchPasswords();
+    } catch (error) {
+      console.error("Error saving credential", error);
+      alert(error.message);
     }
   };
 
