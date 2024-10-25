@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { auth, db } from "../firebase-config";
 import {
   signOut,
@@ -35,17 +35,14 @@ function App() {
 
   const { setCurrentCredential } = useContext(UserContext);
 
-  useEffect(() => {
-    const checkSession = () => {
-      const credinoxLastLoginTime = localStorage.getItem("credinoxLastLoginTime");
-      if (
-        credinoxLastLoginTime &&
-        Date.now() - Number(credinoxLastLoginTime) > SESSION_TIMEOUT
-      ) {
-        handleLogout();
-      }
-    };
+  const checkSession = useCallback(() => {
+    const lastLoginTime = localStorage.getItem("credinoxLastLoginTime");
+    if (lastLoginTime && Date.now() - Number(lastLoginTime) > SESSION_TIMEOUT) {
+      handleLogout();
+    }
+  }, []);
 
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         checkSession();
@@ -58,23 +55,15 @@ function App() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [checkSession]);
 
   useEffect(() => {
     if (user) {
       fetchPasswords();
-      const interval = setInterval(() => {
-        if (
-          Date.now() - Number(localStorage.getItem("credinoxLastLoginTime")) >
-          SESSION_TIMEOUT
-        ) {
-          handleLogout();
-        }
-      }, 60 * 1000); // Check every 1 minute
-
+      const interval = setInterval(checkSession, 60 * 1000); // Check every 1 minute
       return () => clearInterval(interval);
     }
-  }, [user]);
+  }, [user, checkSession]);
 
   const handleSignUp = async () => {
     try {
@@ -87,7 +76,6 @@ function App() {
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, userEmail, userPassword)
       .then(() => {
-        console.log("Sign in successful");
         localStorage.setItem("credinoxLastLoginTime", Date.now().toString());
       })
       .catch((error) => {
@@ -112,13 +100,13 @@ function App() {
     setUserPassword("");
   };
 
-  const savePassword = async (extraFields = null) => {
+  const savePassword = async (extraFields = {}) => {
     try {
       const encryptedPassword = encryptPassword(newPassword);
 
       // Adding document in Firestore
       await addDoc(collection(db, "users", user.uid, "credentials"), {
-        service: service,
+        service,
         password: encryptedPassword,
         createdAt: Date.now(),
         updatedAt: Date.now(),
@@ -135,24 +123,18 @@ function App() {
   };
 
   const handleDelete = async (credentialId, credentialName) => {
-    // Display confirmation prompt to the user
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete '${credentialName}' credentials?`
-    );
-
-    // Proceed only if the user confirms
-    if (confirmDelete) {
+    if (
+      window.confirm(
+        `Are you sure you want to delete '${credentialName}' credentials?`
+      )
+    ) {
       try {
-        // Delete the document in Firestore
         await deleteDoc(doc(db, "users", user.uid, "credentials", credentialId));
-        await fetchPasswords();
+        fetchPasswords();
       } catch (error) {
         console.error("Error deleting credential", error);
         alert(error.message);
       }
-    } else {
-      // If user cancels, do nothing or show a message if needed
-      console.log("Credential deletion canceled");
     }
   };
 
@@ -161,9 +143,7 @@ function App() {
       const credentialRef = doc(db, "users", user.uid, "credentials", credentialId);
 
       // Update the document in Firestore
-      await setDoc(credentialRef, {
-        ...newCredObj,
-      });
+      await setDoc(credentialRef, newCredObj);
 
       await fetchPasswords();
 
@@ -177,16 +157,16 @@ function App() {
     }
   };
 
-  const fetchPasswords = async () => {
+  const fetchPasswords = useCallback(async () => {
     const querySnapshot = await getDocs(
       collection(db, "users", user.uid, "credentials")
     );
-    const passwordList = [];
-    querySnapshot.forEach((doc) => {
-      passwordList.push({ id: doc.id, ...doc.data() });
-    });
-    setCredentials(passwordList);
-  };
+    const credentialList = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setCredentials(credentialList);
+  }, [user]);
 
   const toggleTheme = () => {
     setDarkMode((prev) => !prev);
@@ -218,8 +198,8 @@ function App() {
   };
 
   return (
-    <div className="sm:h-screen bg-gray-50 transition duration-300 dark:bg-gray-900 grid grid-rows-[auto_1fr_auto]">
-      <header className="bg-indigo-500 transition duration-300 dark:bg-indigo-700 py-4 shadow-md">
+    <div className="sm:h-screen bg-gray-50 dark:bg-gray-900 grid grid-rows-[auto_1fr_auto] transition duration-300">
+      <header className="bg-indigo-500 dark:bg-indigo-700 py-4 shadow-md transition duration-300">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">
             Credinox&nbsp;
@@ -241,15 +221,15 @@ function App() {
         <PasswordGenerator />
       </main>
 
-      <footer className="bg-gray-800 transition duration-300 dark:bg-gray-700 py-4">
-        <div className="container mx-auto text-center text-gray-400 transition duration-300 dark:text-gray-300">
+      <footer className="bg-gray-800 dark:bg-gray-700 py-4 transition duration-300">
+        <div className="container mx-auto text-center text-gray-400 dark:text-gray-300 transition duration-300">
           &copy; {new Date().getFullYear()} Credinox. All rights reserved. <br />
           Powered by{" "}
           <a
             href="https://github.com/Luckygoswami"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 transition duration-300 dark:text-indigo-300 hover:underline"
+            className="text-indigo-400 dark:text-indigo-300 hover:underline transition duration-300"
           >
             Lucky Goswami
           </a>
