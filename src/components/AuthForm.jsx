@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import PasswordWrapper from "./PasswordWrapper";
+import React, { useState, useEffect } from 'react';
+import PasswordWrapper from './PasswordWrapper';
 
 function AuthForm({
   userEmail,
@@ -13,16 +13,16 @@ function AuthForm({
 
   // Event handler for keydown
   const handleKeyDown = (e) => {
-    e.key === "Enter" && handleSignIn();
+    e.key === 'Enter' && handleSignIn();
   };
 
   useEffect(() => {
-    const inputElement = document.getElementById("new-password");
-    inputElement.addEventListener("keydown", handleKeyDown);
+    const inputElement = document.getElementById('new-password');
+    inputElement.addEventListener('keydown', handleKeyDown);
 
     // Cleanup the event listener on component unmount
     return () => {
-      inputElement.removeEventListener("keydown", handleKeyDown);
+      inputElement.removeEventListener('keydown', handleKeyDown);
     };
   }, [userPassword, userEmail]);
 
@@ -49,14 +49,12 @@ function AuthForm({
           <div className="flex justify-between space-x-2">
             <button
               onClick={handleSignIn}
-              className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300"
-            >
+              className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300">
               Sign In
             </button>
             <button
               onClick={handleSignUp}
-              className="w-full bg-indigo-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300"
-            >
+              className="w-full bg-indigo-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300">
               Sign Up
             </button>
           </div>

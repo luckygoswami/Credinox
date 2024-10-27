@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 
 function PasswordGenerator() {
   const [length, setLength] = useState(16);
@@ -6,18 +6,18 @@ function PasswordGenerator() {
   const [lowercaseAllowed, setLowercaseAllowed] = useState(true);
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(true);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
 
   const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
-    let pass = "";
-    let str = "";
+    let pass = '';
+    let str = '';
 
-    if (uppercaseAllowed) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (lowercaseAllowed) str += "abcdefghijklmnopqrstuvwxyz";
-    if (numberAllowed) str += "0123456789";
-    if (charAllowed) str += "!@#$%&*_";
+    if (uppercaseAllowed) str += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (lowercaseAllowed) str += 'abcdefghijklmnopqrstuvwxyz';
+    if (numberAllowed) str += '0123456789';
+    if (charAllowed) str += '!@#$%&*_';
 
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1);
@@ -70,8 +70,7 @@ function PasswordGenerator() {
           />
           <button
             onClick={copyPasswordToClipboard}
-            className="bg-blue-500 hover:bg-blue-400 transition duration-300 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-4 py-2 font-medium shrink-0"
-          >
+            className="bg-blue-500 hover:bg-blue-400 transition duration-300 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-4 py-2 font-medium shrink-0">
             Copy
           </button>
         </div>
@@ -105,8 +104,7 @@ function PasswordGenerator() {
             />
             <label
               htmlFor="numberInput"
-              className="cursor-pointer"
-            >
+              className="cursor-pointer">
               Include Numbers (0-9)
             </label>
           </div>
@@ -122,8 +120,7 @@ function PasswordGenerator() {
             />
             <label
               htmlFor="charInput"
-              className="cursor-pointer"
-            >
+              className="cursor-pointer">
               Include Special Characters (!@#$%&*_)
             </label>
           </div>
@@ -139,8 +136,7 @@ function PasswordGenerator() {
             />
             <label
               htmlFor="uppercaseInput"
-              className="cursor-pointer"
-            >
+              className="cursor-pointer">
               Include Uppercase Letters (A-Z)
             </label>
           </div>
@@ -156,8 +152,7 @@ function PasswordGenerator() {
             />
             <label
               htmlFor="lowercaseInput"
-              className="cursor-pointer"
-            >
+              className="cursor-pointer">
               Include Lowercase Letters (a-z)
             </label>
           </div>
@@ -166,8 +161,7 @@ function PasswordGenerator() {
         {/* Generate Password Button */}
         <button
           onClick={passwordGenerator}
-          className="bg-orange-500 hover:bg-orange-400 transition text-white py-2 px-4 rounded-lg font-semibold"
-        >
+          className="bg-orange-500 hover:bg-orange-400 transition text-white py-2 px-4 rounded-lg font-semibold">
           Regenerate Password
         </button>
       </div>

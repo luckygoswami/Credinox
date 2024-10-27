@@ -1,10 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
-import PasswordWrapper from "./PasswordWrapper";
-import EditCredentialForm from "./EditCredentialForm";
-import UserContext from "../context/UserContext";
-import CredentialsList from "./CredentialsList";
+import React, { useState, useContext, useEffect } from 'react';
+import PasswordWrapper from './PasswordWrapper';
+import EditCredentialForm from './EditCredentialForm';
+import UserContext from '../context/UserContext';
+import CredentialsList from './CredentialsList';
 
-const reservedKeywords = ["id", "service", "password", "createdAt", "updatedAt"];
+const reservedKeywords = [
+  'id',
+  'service',
+  'password',
+  'createdAt',
+  'updatedAt',
+];
 
 function Dashboard({
   user,
@@ -29,9 +35,9 @@ function Dashboard({
 
   const handleSave = () => {
     if (!service) {
-      alert("Cannot leave the Service field empty"); // Check if the service field is empty
+      alert('Cannot leave the Service field empty'); // Check if the service field is empty
     } else if (newFieldName || newFieldValue) {
-      alert("Please make sure to Add or Discard new field first!"); // Check if the new fields are empty
+      alert('Please make sure to Add or Discard new field first!'); // Check if the new fields are empty
     } else {
       savePassword(extraFields);
       setExtraFields({});
@@ -39,9 +45,9 @@ function Dashboard({
   };
 
   const addField = () => {
-    !newFieldName || !newFieldValue
-      ? alert("Cannot leave the New Field Name or Value empty before saving!")
-      : (() => {
+    !newFieldName || !newFieldValue ?
+      alert('Cannot leave the New Field Name or Value empty before saving!')
+    : (() => {
         if (reservedKeywords.includes(newFieldName)) {
           alert(
             `${newFieldName} is a reserved keyword, choose another name for the new field`
@@ -69,22 +75,22 @@ function Dashboard({
 
   // Event handler for keydown
   const handleKeyDown = (e) => {
-    e.key === "Enter" && savePassword(extraFields);
+    e.key === 'Enter' && savePassword(extraFields);
   };
 
   useEffect(() => {
-    const inputElement = document.getElementById("new-password");
-    inputElement.addEventListener("keydown", handleKeyDown);
+    const inputElement = document.getElementById('new-password');
+    inputElement.addEventListener('keydown', handleKeyDown);
 
     // Cleanup the event listener on component unmount
     return () => {
-      inputElement.removeEventListener("keydown", handleKeyDown);
+      inputElement.removeEventListener('keydown', handleKeyDown);
     };
   }, [service, newPassword]);
 
   // To add focus to the new field after clicking create new field btn
   useEffect(() => {
-    newField && document.getElementById("new-field-name").focus();
+    newField && document.getElementById('new-field-name').focus();
   }, [newField]);
 
   const CredentialsListProps = {
@@ -92,7 +98,7 @@ function Dashboard({
     reservedKeywords,
     handleDelete,
     decryptPassword,
-  }
+  };
 
   return (
     <div className="sm:w-[60%] h-[100%] max-w-3xl p-4">
@@ -105,22 +111,20 @@ function Dashboard({
           <button
             id="logout-btn"
             onClick={handleLogout}
-            className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
-          >
+            className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
             Logout
           </button>
         </div>
 
         {/* Credentials operations */}
         <div
-          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${credentials.length > 0 ? "sm:pr-1" : "sm:pr-5"
-            }`}
-        >
+          className={`password-fields-container overflow-auto px-4 sm:pl-5 ${
+            credentials.length > 0 ? 'sm:pr-1' : 'sm:pr-5'
+          }`}>
           {/* Create and Edit credential form */}
-          {currentCredential?.id ? (
+          {currentCredential?.id ?
             <EditCredentialForm {...editCredFormProps} />
-          ) : (
-            <div className="mb-4">
+          : <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300 mb-2">
                 Save a New Credential
               </h3>
@@ -144,8 +148,7 @@ function Dashboard({
                 {Object.entries(extraFields).map(([key, value]) => (
                   <div
                     key={key}
-                    className="flex gap-2"
-                  >
+                    className="flex gap-2">
                     <input
                       type="text"
                       readOnly
@@ -182,8 +185,7 @@ function Dashboard({
                     />
                     <button
                       onClick={addField}
-                      className="addField-btn grow px-4 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
-                    >
+                      className="addField-btn grow px-4 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200">
                       Add
                     </button>
                   </div>
@@ -192,20 +194,18 @@ function Dashboard({
                 <div className="flex gap-2">
                   <button
                     onClick={createDiscardToggle}
-                    className="create-discard-btn grow px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
-                  >
+                    className="create-discard-btn grow px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200">
                     {newField ? `Discard new field` : `Add new field`}
                   </button>
                   <button
                     onClick={handleSave}
-                    className="grow px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-200"
-                  >
+                    className="grow px-4 py-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-200">
                     Save Credential
                   </button>
                 </div>
               </div>
             </div>
-          )}
+          }
 
           {/* Credentials list */}
           <CredentialsList {...CredentialsListProps} />

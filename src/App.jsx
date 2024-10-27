@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
-import { auth, db } from "../firebase-config";
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { auth, db } from '../firebase-config';
 import {
   signOut,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from "firebase/auth";
+} from 'firebase/auth';
 import {
   collection,
   doc,
@@ -13,13 +13,13 @@ import {
   addDoc,
   getDocs,
   deleteDoc,
-} from "firebase/firestore";
-import CryptoJS from "crypto-js";
+} from 'firebase/firestore';
+import CryptoJS from 'crypto-js';
 
-import Dashboard from "./components/Dashboard";
-import AuthForm from "./components/AuthForm";
-import PasswordGenerator from "./components/PasswordGenerator";
-import UserContext from "./context/UserContext";
+import Dashboard from './components/Dashboard';
+import AuthForm from './components/AuthForm';
+import PasswordGenerator from './components/PasswordGenerator';
+import UserContext from './context/UserContext';
 
 const SESSION_TIMEOUT = 60 * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
@@ -27,16 +27,16 @@ const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 function App() {
   const [user, setUser] = useState(null);
   const [credentials, setCredentials] = useState([]);
-  const [newPassword, setNewPassword] = useState("");
-  const [service, setService] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userPassword, setUserPassword] = useState("");
+  const [newPassword, setNewPassword] = useState('');
+  const [service, setService] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
 
   const { setCurrentCredential } = useContext(UserContext);
 
   const checkSession = useCallback(() => {
-    const lastLoginTime = localStorage.getItem("credinoxLastLoginTime");
+    const lastLoginTime = localStorage.getItem('credinoxLastLoginTime');
     if (lastLoginTime && Date.now() - Number(lastLoginTime) > SESSION_TIMEOUT) {
       handleLogout();
     }
@@ -47,10 +47,10 @@ function App() {
       if (currentUser) {
         checkSession();
         setUser(currentUser);
-        localStorage.setItem("credinoxLastLoginTime", Date.now().toString());
+        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
       } else {
         setUser(null);
-        localStorage.removeItem("credinoxLastLoginTime");
+        localStorage.removeItem('credinoxLastLoginTime');
       }
     });
 
@@ -69,14 +69,14 @@ function App() {
     try {
       await createUserWithEmailAndPassword(auth, userEmail, userPassword);
     } catch (error) {
-      console.error("Error signing up", error);
+      console.error('Error signing up', error);
     }
   };
 
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, userEmail, userPassword)
       .then(() => {
-        localStorage.setItem("credinoxLastLoginTime", Date.now().toString());
+        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
       })
       .catch((error) => {
         console.log(error);
@@ -96,8 +96,8 @@ function App() {
   const handleLogout = async () => {
     setCredentials([]);
     await signOut(auth);
-    localStorage.removeItem("credinoxLastLoginTime");
-    setUserPassword("");
+    localStorage.removeItem('credinoxLastLoginTime');
+    setUserPassword('');
   };
 
   const savePassword = async (extraFields = {}) => {
@@ -105,7 +105,7 @@ function App() {
       const encryptedPassword = encryptPassword(newPassword);
 
       // Adding document in Firestore
-      await addDoc(collection(db, "users", user.uid, "credentials"), {
+      await addDoc(collection(db, 'users', user.uid, 'credentials'), {
         service,
         password: encryptedPassword,
         createdAt: Date.now(),
@@ -113,11 +113,11 @@ function App() {
         ...extraFields,
       });
 
-      setService("");
-      setNewPassword("");
+      setService('');
+      setNewPassword('');
       fetchPasswords();
     } catch (error) {
-      console.error("Error saving credential", error);
+      console.error('Error saving credential', error);
       alert(error.message);
     }
   };
@@ -129,10 +129,12 @@ function App() {
       )
     ) {
       try {
-        await deleteDoc(doc(db, "users", user.uid, "credentials", credentialId));
+        await deleteDoc(
+          doc(db, 'users', user.uid, 'credentials', credentialId)
+        );
         fetchPasswords();
       } catch (error) {
-        console.error("Error deleting credential", error);
+        console.error('Error deleting credential', error);
         alert(error.message);
       }
     }
@@ -140,7 +142,13 @@ function App() {
 
   const handleUpdate = async (credentialId, newCredObj) => {
     try {
-      const credentialRef = doc(db, "users", user.uid, "credentials", credentialId);
+      const credentialRef = doc(
+        db,
+        'users',
+        user.uid,
+        'credentials',
+        credentialId
+      );
 
       // Update the document in Firestore
       await setDoc(credentialRef, newCredObj);
@@ -148,18 +156,18 @@ function App() {
       await fetchPasswords();
 
       setTimeout(() => {
-        alert("credential updated successfully");
+        alert('credential updated successfully');
       }, 100);
 
       setCurrentCredential(null);
     } catch (error) {
-      console.error("Error updating credential: ", error);
+      console.error('Error updating credential: ', error);
     }
   };
 
   const fetchPasswords = useCallback(async () => {
     const querySnapshot = await getDocs(
-      collection(db, "users", user.uid, "credentials")
+      collection(db, 'users', user.uid, 'credentials')
     );
     const credentialList = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -170,7 +178,7 @@ function App() {
 
   const toggleTheme = () => {
     setDarkMode((prev) => !prev);
-    document.querySelector("html").classList.toggle("dark");
+    document.querySelector('html').classList.toggle('dark');
   };
 
   const DashboardProps = {
@@ -205,11 +213,9 @@ function App() {
             Credinox&nbsp;
             <button
               id="theme-btn"
-              onClick={toggleTheme}
-            >
+              onClick={toggleTheme}>
               <i
-                className={`text-2xl bi bi-${darkMode ? "moon-stars" : "sun"}-fill`}
-              ></i>
+                className={`text-2xl bi bi-${darkMode ? 'moon-stars' : 'sun'}-fill`}></i>
             </button>
           </h1>
           <p className="text-white text-lg">Your Credentials Manager</p>
@@ -217,20 +223,22 @@ function App() {
       </header>
 
       <main className="container mx-auto sm:my-10 flex flex-col sm:flex-row justify-between sm:px-10 overflow-auto">
-        {user ? <Dashboard {...DashboardProps} /> : <AuthForm {...AuthProps} />}
+        {user ?
+          <Dashboard {...DashboardProps} />
+        : <AuthForm {...AuthProps} />}
         <PasswordGenerator />
       </main>
 
       <footer className="bg-gray-800 dark:bg-gray-700 py-4 transition duration-300">
         <div className="container mx-auto text-center text-gray-400 dark:text-gray-300 transition duration-300">
-          &copy; {new Date().getFullYear()} Credinox. All rights reserved. <br />
-          Powered by{" "}
+          &copy; {new Date().getFullYear()} Credinox. All rights reserved.
+          <br />
+          Powered by{' '}
           <a
             href="https://github.com/Luckygoswami"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 dark:text-indigo-300 hover:underline transition duration-300"
-          >
+            className="text-indigo-400 dark:text-indigo-300 hover:underline transition duration-300">
             Lucky Goswami
           </a>
         </div>

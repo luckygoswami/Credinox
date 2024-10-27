@@ -1,9 +1,13 @@
-import React, { useState, useContext, useEffect } from "react";
-import UserContext from "../context/UserContext";
+import React, { useState, useContext, useEffect } from 'react';
+import UserContext from '../context/UserContext';
 
-const reservedKeywords = ["id", "createdAt", "updatedAt"];
+const reservedKeywords = ['id', 'createdAt', 'updatedAt'];
 
-function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) {
+function EditCredentialForm({
+  encryptPassword,
+  decryptPassword,
+  handleUpdate,
+}) {
   const { currentCredential, setCurrentCredential } = useContext(UserContext);
   const [editCredObj, setEditCredObj] = useState({ ...currentCredential });
   const [newField, setNewField] = useState(false);
@@ -24,7 +28,7 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
 
   // To add focus to the new field after clicking create new field btn
   useEffect(() => {
-    newField && document.getElementById("new-field-name").focus();
+    newField && document.getElementById('new-field-name').focus();
   }, [newField]);
 
   // Handle value changes
@@ -37,8 +41,8 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
 
   // Handle delete field
   const handleDeleteField = (key) => {
-    if (key == "service") {
-      alert("Deleting the Service field is not allowed!");
+    if (key == 'service') {
+      alert('Deleting the Service field is not allowed!');
     } else {
       const { [key]: removed, ...remainingFields } = editCredObj;
       setEditCredObj(remainingFields);
@@ -48,9 +52,9 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
   // Handle saving changes
   const handleSaveChanges = () => {
     if (!editCredObj.service) {
-      alert("Cannot leave the Service name field empty");
+      alert('Cannot leave the Service name field empty');
     } else if (newFieldName || newFieldValue) {
-      alert("Please make sure to add or discard the new field first!");
+      alert('Please make sure to add or discard the new field first!');
     } else {
       handleUpdate(currentCredential.id, {
         id: currentCredential.id,
@@ -72,9 +76,9 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
   };
 
   const addField = () => {
-    !newFieldName || !newFieldValue
-      ? alert("Cannot leave the New Field Name or Value empty before saving!")
-      : (() => {
+    !newFieldName || !newFieldValue ?
+      alert('Cannot leave the New Field Name or Value empty before saving!')
+    : (() => {
         if (
           reservedKeywords.includes(newFieldName) ||
           Object.keys(editCredObj).includes(newFieldName)
@@ -106,8 +110,7 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
             !reservedKeywords.includes(key) && (
               <div
                 key={key}
-                className="cred-container flex justify-between"
-              >
+                className="cred-container flex justify-between">
                 <div className="flex flex-col grow gap-1 sm:flex-row">
                   <input
                     type="text"
@@ -126,8 +129,7 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
                   />
                   <button
                     onClick={() => handleDeleteField(key)}
-                    className="addField-btn grow py-2 px-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
-                  >
+                    className="addField-btn grow py-2 px-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
                     Delete
                   </button>
                 </div>
@@ -152,8 +154,7 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
             />
             <button
               onClick={addField}
-              className="addField-btn grow px-3 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200"
-            >
+              className="addField-btn grow px-3 py-2 bg-orange-400 text-white font-semibold rounded hover:bg-orange-500 transition duration-200">
               Add
             </button>
           </div>
@@ -161,20 +162,17 @@ function EditCredentialForm({ encryptPassword, decryptPassword, handleUpdate }) 
         <div className="cred-edit-ops flex gap-1 justify-between">
           <button
             className="px-2 grow text-white font-semibold py-2 bg-orange-500 hover:bg-orange-600 rounded transition duration-200"
-            onClick={() => setCurrentCredential(null)}
-          >
+            onClick={() => setCurrentCredential(null)}>
             Discard Editing
           </button>
           <button
             className="px-2 grow text-white font-semibold py-2 bg-blue-500 hover:bg-blue-600 rounded transition duration-200"
-            onClick={createDiscardToggle}
-          >
+            onClick={createDiscardToggle}>
             {newField ? `Discard new field` : `Add new field`}
           </button>
           <button
             className="px-2 grow text-white font-semibold py-2 bg-green-500 hover:bg-green-600 rounded transition duration-200"
-            onClick={handleSaveChanges}
-          >
+            onClick={handleSaveChanges}>
             Save Changes
           </button>
         </div>
