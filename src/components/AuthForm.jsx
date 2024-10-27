@@ -11,7 +11,6 @@ function AuthForm({
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
 
-  // Event handler for keydown
   const handleKeyDown = (e) => {
     e.key === 'Enter' && handleSignIn();
   };

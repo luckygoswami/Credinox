@@ -16,8 +16,8 @@ import {
 } from 'firebase/firestore';
 import CryptoJS from 'crypto-js';
 
-import Dashboard from './components/Dashboard';
 import AuthForm from './components/AuthForm';
+import Dashboard from './components/Dashboard';
 import PasswordGenerator from './components/PasswordGenerator';
 import UserContext from './context/UserContext';
 
