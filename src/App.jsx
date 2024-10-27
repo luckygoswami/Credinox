@@ -215,6 +215,7 @@ function App() {
               id="theme-btn"
               onClick={toggleTheme}>
               <i
+                id="theme-icon"
                 className={`text-2xl bi bi-${darkMode ? 'moon-stars' : 'sun'}-fill`}></i>
             </button>
           </h1>
