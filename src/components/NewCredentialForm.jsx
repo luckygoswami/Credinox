@@ -100,7 +100,7 @@ function NewCredentialForm({
         {Object.entries(extraFields).map(([key, value]) => (
           <div
             key={key}
-            className="flex gap-2">
+            className="flex gap-1 flex-col sm:flex-row">
             <input
               type="text"
               readOnly
