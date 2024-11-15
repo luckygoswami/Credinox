@@ -20,8 +20,9 @@ import AuthForm from './components/AuthForm';
 import Dashboard from './components/Dashboard';
 import PasswordGenerator from './components/PasswordGenerator';
 import UserContext from './context/UserContext';
+import useTheme from './hooks/useTheme';
 
-const SESSION_TIMEOUT = 60 * 60 * 1000;
+const SESSION_TIMEOUT = 15 * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function App() {
@@ -31,9 +32,9 @@ function App() {
   const [service, setService] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
 
   const { setCurrentCredential } = useContext(UserContext);
+  const { theme, setTheme } = useTheme();
 
   const checkSession = useCallback(() => {
     const lastLoginTime = localStorage.getItem('credinoxLastLoginTime');
@@ -176,11 +177,6 @@ function App() {
     setCredentials(credentialList);
   }, [user]);
 
-  const toggleTheme = () => {
-    setDarkMode((prev) => !prev);
-    document.querySelector('html').classList.toggle('dark');
-  };
-
   const DashboardProps = {
     user,
     handleLogout,
@@ -205,28 +201,79 @@ function App() {
     handleSignUp,
   };
 
+  function ClickHoldButton() {
+    const [holdTimeout, setHoldTimeout] = useState(null);
+    const [isTouchEvent, setIsTouchEvent] = useState(false); // Flag to prevent duplicate events
+    const holdDuration = 1000;
+
+    const startHold = (isTouch = false) => {
+      if (isTouch) {
+        setIsTouchEvent(true); // Mark that a touch event has been triggered
+      }
+
+      const timeout = setTimeout(() => {
+        setTheme('system');
+        setHoldTimeout(null);
+      }, holdDuration);
+
+      setHoldTimeout(timeout);
+    };
+
+    const cancelHold = () => {
+      if (holdTimeout) {
+        clearTimeout(holdTimeout);
+        setHoldTimeout(null);
+
+        if (!isTouchEvent) {
+          if (
+            theme == 'dark' ||
+            (theme == 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
+            setTheme('light');
+          } else {
+            setTheme('dark');
+          }
+        }
+      }
+      setIsTouchEvent(false); // Reset the touch flag
+    };
+
+    return (
+      <button
+        id="`theme-btn"
+        onMouseDown={() => !isTouchEvent && startHold()} // Only triggers if it's not a touch event
+        onMouseUp={cancelHold}
+        onMouseLeave={cancelHold}
+        onTouchStart={() => startHold(true)}
+        onTouchEnd={cancelHold}>
+        <i
+          id="theme-icon"
+          className={`text-2xl bi bi-${
+            theme == 'dark' ||
+            (theme == 'system' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+              ? 'moon-stars'
+              : 'sun'
+          }-fill`}></i>
+      </button>
+    );
+  }
+
   return (
     <div className="sm:h-screen bg-gray-50 dark:bg-gray-900 grid grid-rows-[auto_1fr_auto] transition duration-300">
       <header className="bg-indigo-500 dark:bg-indigo-700 py-4 shadow-md transition duration-300">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">
             Credinox&nbsp;
-            <button
-              id="theme-btn"
-              onClick={toggleTheme}>
-              <i
-                id="theme-icon"
-                className={`text-2xl bi bi-${darkMode ? 'moon-stars' : 'sun'}-fill`}></i>
-            </button>
+            <ClickHoldButton />
           </h1>
           <p className="text-white text-lg">Your Credentials Manager</p>
         </div>
       </header>
 
       <main className="container mx-auto sm:my-10 flex flex-col sm:flex-row justify-between sm:px-10 overflow-auto">
-        {user ?
-          <Dashboard {...DashboardProps} />
-        : <AuthForm {...AuthProps} />}
+        {user ? <Dashboard {...DashboardProps} /> : <AuthForm {...AuthProps} />}
         <PasswordGenerator />
       </main>
 
@@ -236,7 +283,7 @@ function App() {
           <br />
           Powered by{' '}
           <a
-            href="https://github.com/Luckygoswami"
+            href="https://www.linkedin.com/in/deepakgoswamii/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-indigo-400 dark:text-indigo-300 hover:underline transition duration-300">
