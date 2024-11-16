@@ -55,9 +55,9 @@ function EditCredentialForm({
   // Handle saving changes
   const handleSaveChanges = () => {
     if (!editCredObj.service) {
-      toast.error('Cannot leave the Service name field empty');
+      toast.info('Cannot leave the Service name field empty');
     } else if (newFieldName || newFieldValue) {
-      toast.error('Please make sure to add or discard the new field first!');
+      toast.info('Please make sure to add or discard the new field first!');
     } else {
       handleUpdate(currentCredential.id, {
         id: currentCredential.id,
@@ -80,7 +80,7 @@ function EditCredentialForm({
 
   const addField = () => {
     !newFieldName || !newFieldValue
-      ? toast.error(
+      ? toast.info(
           'Cannot leave the New Field Name or Value empty before saving!'
         )
       : (() => {
@@ -88,7 +88,7 @@ function EditCredentialForm({
             reservedKeywords.includes(newFieldName) ||
             Object.keys(editCredObj).includes(newFieldName)
           ) {
-            toast.error(
+            toast.info(
               `'${newFieldName}' already exists choose another name for the new field`
             );
           } else {

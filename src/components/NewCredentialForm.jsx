@@ -28,9 +28,9 @@ function NewCredentialForm({
 
   const handleSave = () => {
     if (!service) {
-      toast.error('Cannot leave the Service field empty'); // Check if the service field is empty
+      toast.info('Cannot leave the Service field empty'); // Check if the service field is empty
     } else if (newFieldName || newFieldValue) {
-      toast.error('Please make sure to Add or Discard new field first!'); // Check if the new fields are empty
+      toast.info('Please make sure to Add or Discard new field first!'); // Check if the new fields are empty
     } else {
       savePassword(extraFields);
       setExtraFields({});
@@ -43,12 +43,12 @@ function NewCredentialForm({
 
   const addField = () => {
     !newFieldName || !newFieldValue
-      ? toast.error(
+      ? toast.info(
           'Cannot leave the New Field Name or Value empty before saving!'
         )
       : (() => {
           if (reservedKeywords.includes(newFieldName)) {
-            toast.error(
+            toast.info(
               `${newFieldName} is a reserved keyword, choose another name for the new field`
             );
           } else {
