@@ -182,12 +182,6 @@ function EditCredentialForm({
           </button>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        closeOnClick={true}
-        draggable={true}
-        theme={themeMode}
-      />
     </div>
   );
 }
