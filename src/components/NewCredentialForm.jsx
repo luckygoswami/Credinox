@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PasswordWrapper from './PasswordWrapper';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UserContext from '../context/UserContext';
 
 const reservedKeywords = [
   'id',
@@ -21,12 +24,13 @@ function NewCredentialForm({
   const [newFieldValue, setNewFieldValue] = useState(null);
   const [newField, setNewField] = useState(false);
   const [extraFields, setExtraFields] = useState({});
+  const { themeMode } = useContext(UserContext);
 
   const handleSave = () => {
     if (!service) {
-      alert('Cannot leave the Service field empty'); // Check if the service field is empty
+      toast.error('Cannot leave the Service field empty'); // Check if the service field is empty
     } else if (newFieldName || newFieldValue) {
-      alert('Please make sure to Add or Discard new field first!'); // Check if the new fields are empty
+      toast.error('Please make sure to Add or Discard new field first!'); // Check if the new fields are empty
     } else {
       savePassword(extraFields);
       setExtraFields({});
@@ -38,20 +42,22 @@ function NewCredentialForm({
   };
 
   const addField = () => {
-    !newFieldName || !newFieldValue ?
-      alert('Cannot leave the New Field Name or Value empty before saving!')
-    : (() => {
-        if (reservedKeywords.includes(newFieldName)) {
-          alert(
-            `${newFieldName} is a reserved keyword, choose another name for the new field`
-          );
-        } else {
-          extraFields[newFieldName] = newFieldValue;
-          setNewField(false);
-          setNewFieldName(null);
-          setNewFieldValue(null);
-        }
-      })();
+    !newFieldName || !newFieldValue
+      ? toast.error(
+          'Cannot leave the New Field Name or Value empty before saving!'
+        )
+      : (() => {
+          if (reservedKeywords.includes(newFieldName)) {
+            toast.error(
+              `${newFieldName} is a reserved keyword, choose another name for the new field`
+            );
+          } else {
+            extraFields[newFieldName] = newFieldValue;
+            setNewField(false);
+            setNewFieldName(null);
+            setNewFieldValue(null);
+          }
+        })();
   };
 
   const createDiscardToggle = () => {
@@ -156,6 +162,12 @@ function NewCredentialForm({
           </button>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        closeOnClick={true}
+        draggable={true}
+        theme={themeMode}
+      />
     </div>
   );
 }

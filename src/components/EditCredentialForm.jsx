@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import UserContext from '../context/UserContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const reservedKeywords = ['id', 'createdAt', 'updatedAt'];
 
@@ -8,7 +10,8 @@ function EditCredentialForm({
   decryptPassword,
   handleUpdate,
 }) {
-  const { currentCredential, setCurrentCredential } = useContext(UserContext);
+  const { currentCredential, setCurrentCredential, themeMode } =
+    useContext(UserContext);
   const [editCredObj, setEditCredObj] = useState({ ...currentCredential });
   const [newField, setNewField] = useState(false);
   const [newFieldName, setNewFieldName] = useState(null);
@@ -42,7 +45,7 @@ function EditCredentialForm({
   // Handle delete field
   const handleDeleteField = (key) => {
     if (key == 'service') {
-      alert('Deleting the Service field is not allowed!');
+      toast.error('Deleting the Service field is not allowed!');
     } else {
       const { [key]: removed, ...remainingFields } = editCredObj;
       setEditCredObj(remainingFields);
@@ -52,9 +55,9 @@ function EditCredentialForm({
   // Handle saving changes
   const handleSaveChanges = () => {
     if (!editCredObj.service) {
-      alert('Cannot leave the Service name field empty');
+      toast.error('Cannot leave the Service name field empty');
     } else if (newFieldName || newFieldValue) {
-      alert('Please make sure to add or discard the new field first!');
+      toast.error('Please make sure to add or discard the new field first!');
     } else {
       handleUpdate(currentCredential.id, {
         id: currentCredential.id,
@@ -76,23 +79,25 @@ function EditCredentialForm({
   };
 
   const addField = () => {
-    !newFieldName || !newFieldValue ?
-      alert('Cannot leave the New Field Name or Value empty before saving!')
-    : (() => {
-        if (
-          reservedKeywords.includes(newFieldName) ||
-          Object.keys(editCredObj).includes(newFieldName)
-        ) {
-          alert(
-            `'${newFieldName}' already exists choose another name for the new field`
-          );
-        } else {
-          editCredObj[newFieldName] = newFieldValue;
-          setNewField(false);
-          setNewFieldName(null);
-          setNewFieldValue(null);
-        }
-      })();
+    !newFieldName || !newFieldValue
+      ? toast.error(
+          'Cannot leave the New Field Name or Value empty before saving!'
+        )
+      : (() => {
+          if (
+            reservedKeywords.includes(newFieldName) ||
+            Object.keys(editCredObj).includes(newFieldName)
+          ) {
+            toast.error(
+              `'${newFieldName}' already exists choose another name for the new field`
+            );
+          } else {
+            editCredObj[newFieldName] = newFieldValue;
+            setNewField(false);
+            setNewFieldName(null);
+            setNewFieldValue(null);
+          }
+        })();
   };
 
   return (
@@ -177,6 +182,12 @@ function EditCredentialForm({
           </button>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        closeOnClick={true}
+        draggable={true}
+        theme={themeMode}
+      />
     </div>
   );
 }

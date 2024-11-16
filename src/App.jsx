@@ -21,6 +21,8 @@ import Dashboard from './components/Dashboard';
 import PasswordGenerator from './components/PasswordGenerator';
 import UserContext from './context/UserContext';
 import useTheme from './hooks/useTheme';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SESSION_TIMEOUT = 15 * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
@@ -33,7 +35,7 @@ function App() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
 
-  const { setCurrentCredential } = useContext(UserContext);
+  const { setCurrentCredential, themeMode } = useContext(UserContext);
   const { theme, setTheme } = useTheme();
 
   const checkSession = useCallback(() => {
@@ -71,6 +73,7 @@ function App() {
       await createUserWithEmailAndPassword(auth, userEmail, userPassword);
     } catch (error) {
       console.error('Error signing up', error);
+      toast.error('Error signing up!');
     }
   };
 
@@ -81,7 +84,7 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
-        alert(error.message);
+        toast.error(error.message);
       });
   };
 
@@ -119,7 +122,7 @@ function App() {
       fetchPasswords();
     } catch (error) {
       console.error('Error saving credential', error);
-      alert(error.message);
+      toast.error('Error saving credential!');
     }
   };
 
@@ -133,10 +136,11 @@ function App() {
         await deleteDoc(
           doc(db, 'users', user.uid, 'credentials', credentialId)
         );
+        toast.success('Credential Deleted successfully!');
         fetchPasswords();
       } catch (error) {
         console.error('Error deleting credential', error);
-        alert(error.message);
+        toast.error('Error deleting credential!');
       }
     }
   };
@@ -156,13 +160,12 @@ function App() {
 
       await fetchPasswords();
 
-      setTimeout(() => {
-        alert('credential updated successfully');
-      }, 100);
+      toast.success('Credential Updated successfully!');
 
       setCurrentCredential(null);
     } catch (error) {
       console.error('Error updating credential: ', error);
+      toast.error('Error updating credential!');
     }
   };
 
@@ -250,11 +253,7 @@ function App() {
         <i
           id="theme-icon"
           className={`text-2xl bi bi-${
-            theme == 'dark' ||
-            (theme == 'system' &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches)
-              ? 'moon-stars'
-              : 'sun'
+            themeMode == 'dark' ? 'moon-stars' : 'sun'
           }-fill`}></i>
       </button>
     );
@@ -291,6 +290,12 @@ function App() {
           </a>
         </div>
       </footer>
+      <ToastContainer
+        position="top-center"
+        closeOnClick={true}
+        draggable={true}
+        theme={themeMode}
+      />
     </div>
   );
 }
