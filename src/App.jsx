@@ -23,6 +23,7 @@ import UserContext from './context/UserContext';
 import useTheme from './hooks/useTheme';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import packageJson from '../package.json';
 
 const SESSION_TIMEOUT = 15 * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
@@ -278,7 +279,9 @@ function App() {
 
       <footer className="bg-gray-800 dark:bg-gray-700 py-4 transition duration-300">
         <div className="container mx-auto text-center text-gray-400 dark:text-gray-300 transition duration-300">
-          &copy; {new Date().getFullYear()} Credinox. All rights reserved.
+          &copy; {new Date().getFullYear()}{' '}
+          <span title={`v${packageJson.version}`}>Credinox.</span> All rights
+          reserved.
           <br />
           Powered by{' '}
           <a
