@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import PasswordWrapper from './PasswordWrapper';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import UserContext from '../context/UserContext';
 
 const reservedKeywords = [
   'id',
@@ -24,7 +23,6 @@ function NewCredentialForm({
   const [newFieldValue, setNewFieldValue] = useState(null);
   const [newField, setNewField] = useState(false);
   const [extraFields, setExtraFields] = useState({});
-  const { themeMode } = useContext(UserContext);
 
   const handleSave = () => {
     if (!service) {

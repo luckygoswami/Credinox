@@ -76,9 +76,9 @@ function CredentialsList({
           className="bi bi-search absolute inset-y-0 right-3 flex items-center text-gray-600 dark:text-gray-400 transition duration-300"></i>
       </div>
       <ul className="divide-y divide-gray-200 transition duration-300 dark:divide-gray-600">
-        {credentials.length > 0 ?
+        {credentials.length > 0 ? (
           <div>
-            {filterData(credentials, searchKeyword).length > 0 ?
+            {filterData(credentials, searchKeyword).length > 0 ? (
               filterData(credentials, searchKeyword).map(
                 (credential, index) => (
                   <div
@@ -86,9 +86,9 @@ function CredentialsList({
                     key={index}>
                     <div
                       className={`credential-header p-2 flex justify-between bg-gray-100  transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${
-                        openIndex === index ?
-                          'rounded-tl-md rounded-tr-md'
-                        : 'rounded-md'
+                        openIndex === index
+                          ? 'rounded-tl-md rounded-tr-md'
+                          : 'rounded-md'
                       } `}
                       onClick={(e) =>
                         e.target.tagName === 'DIV' && toggleExpand(index)
@@ -100,7 +100,12 @@ function CredentialsList({
                       </span>
                       <span className="cred-ops flex gap-2">
                         <button
-                          onClick={() => setCurrentCredential(credential)}
+                          onClick={() => {
+                            document
+                              .querySelector('.password-fields-container')
+                              .scrollTo({ top: 0, behavior: 'smooth' });
+                            setCurrentCredential(credential);
+                          }}
                           id="edit-btn">
                           <i className="bi bi-pencil-square"></i>
                         </button>
@@ -136,9 +141,9 @@ function CredentialsList({
                                 </div>
                                 <div className="flex">
                                   <div className="cred-value text-black transition duration-300 dark:text-gray-300">
-                                    {key === 'password' ?
-                                      decryptPassword(value)
-                                    : value}
+                                    {key === 'password'
+                                      ? decryptPassword(value)
+                                      : value}
                                   </div>
                                   <button
                                     className="copy-btn mx-2"
@@ -172,15 +177,17 @@ function CredentialsList({
                   </div>
                 )
               )
-            : <p className="my-1 text-gray-500 transition duration-300 dark:text-gray-400">
+            ) : (
+              <p className="my-1 text-gray-500 transition duration-300 dark:text-gray-400">
                 No such credential found!
               </p>
-            }
+            )}
           </div>
-        : <p className="my-1 text-gray-500 transition duration-300 dark:text-gray-400">
+        ) : (
+          <p className="my-1 text-gray-500 transition duration-300 dark:text-gray-400">
             No saved credentials yet!
           </p>
-        }
+        )}
       </ul>
     </div>
   );

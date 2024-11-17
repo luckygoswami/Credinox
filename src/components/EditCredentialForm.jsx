@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import UserContext from '../context/UserContext';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const reservedKeywords = ['id', 'createdAt', 'updatedAt'];
@@ -10,8 +10,7 @@ function EditCredentialForm({
   decryptPassword,
   handleUpdate,
 }) {
-  const { currentCredential, setCurrentCredential, themeMode } =
-    useContext(UserContext);
+  const { currentCredential, setCurrentCredential } = useContext(UserContext);
   const [editCredObj, setEditCredObj] = useState({ ...currentCredential });
   const [newField, setNewField] = useState(false);
   const [newFieldName, setNewFieldName] = useState(null);
