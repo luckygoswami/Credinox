@@ -102,8 +102,11 @@ function CredentialsList({
                         <button
                           onClick={() => {
                             document
-                              .querySelector('.password-fields-container')
-                              .scrollTo({ top: 0, behavior: 'smooth' });
+                              .querySelector('.form-container')
+                              .scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start',
+                              });
                             setCurrentCredential(credential);
                           }}
                           id="edit-btn">
