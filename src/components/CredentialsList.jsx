@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
+import SearchInput from './SearchInput';
 
 const getDateAndTime = (timestamp) => {
   const dateAndTime = new Date(timestamp);
@@ -54,27 +55,15 @@ function CredentialsList({
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const handleSearch = (e) => {
-    setSearchKeyword(e.target.value);
-  };
-
   return (
     <div className="creds-container">
       <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300">
         Your Saved Credentials
       </h3>
-      <div className="search-wrapper relative">
-        <input
-          type="text"
-          value={searchKeyword}
-          onChange={handleSearch}
-          placeholder="Search by Service name or User"
-          className="p-2 pr-10 my-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-200 w-full transition duration-300"
-        />
-        <i
-          tabIndex="-1"
-          className="bi bi-search absolute inset-y-0 right-3 flex items-center text-gray-600 dark:text-gray-400 transition duration-300"></i>
-      </div>
+      <SearchInput
+        searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
+      />
       <ul className="divide-y divide-gray-200 transition duration-300 dark:divide-gray-600">
         {credentials.length > 0 ? (
           <div>
@@ -85,7 +74,7 @@ function CredentialsList({
                     className="credential-container mb-2 cursor-pointer text-black dark:text-white"
                     key={index}>
                     <div
-                      className={`credential-header p-2 flex justify-between bg-gray-100  transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${
+                      className={`credential-header p-2 flex justify-between bg-gray-100 transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${
                         openIndex === index
                           ? 'rounded-tl-md rounded-tr-md'
                           : 'rounded-md'
