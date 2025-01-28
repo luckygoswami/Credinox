@@ -25,7 +25,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import packageJson from '../package.json';
 
-const SESSION_TIMEOUT = 15 * 60 * 1000;
+const SESSION_TIMEOUT = Number(import.meta.env.VITE_SESSION_LIMIT) * 60 * 1000;
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
 
 function App() {
