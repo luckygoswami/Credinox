@@ -71,10 +71,13 @@ function Dashboard({
             credentials.length > 0 ? 'sm:pr-1' : 'sm:pr-5'
           }`}>
           {/* Create and Edit credential form */}
-          {currentCredential?.id ?
-            <EditCredentialForm {...editCredFormProps} />
-          : <NewCredentialForm {...NewCredentialFormProps} />}
-
+          <div className="form-container">
+            {currentCredential?.id ? (
+              <EditCredentialForm {...editCredFormProps} />
+            ) : (
+              <NewCredentialForm {...NewCredentialFormProps} />
+            )}
+          </div>
           {/* Credentials list */}
           <CredentialsList {...CredentialsListProps} />
         </div>

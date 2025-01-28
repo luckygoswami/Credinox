@@ -99,6 +99,7 @@ function App() {
   };
 
   const handleLogout = async () => {
+    setCurrentCredential(null);
     setCredentials([]);
     await signOut(auth);
     localStorage.removeItem('credinoxLastLoginTime');

@@ -74,15 +74,16 @@ function CredentialsList({
                     className="credential-container mb-2 cursor-pointer text-black dark:text-white"
                     key={index}>
                     <div
-                      className={`credential-header p-2 flex justify-between bg-gray-100 transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${
+                      id="toggleable"
+                      className={`credential-header p-2 flex justify-between bg-gray-100  transition duration-300 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 ${
                         openIndex === index
                           ? 'rounded-tl-md rounded-tr-md'
                           : 'rounded-md'
                       } `}
                       onClick={(e) =>
-                        e.target.tagName === 'DIV' && toggleExpand(index)
+                        e.target.id === 'toggleable' && toggleExpand(index)
                       }>
-                      <span>
+                      <span id="toggleable">
                         {credential.service}{' '}
                         {(credential.user && `(${credential.user})`) ||
                           (credential.User && `(${credential.User})`)}
@@ -91,8 +92,11 @@ function CredentialsList({
                         <button
                           onClick={() => {
                             document
-                              .querySelector('.password-fields-container')
-                              .scrollTo({ top: 0, behavior: 'smooth' });
+                              .querySelector('.form-container')
+                              .scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start',
+                              });
                             setCurrentCredential(credential);
                           }}
                           id="edit-btn">
@@ -125,7 +129,7 @@ function CredentialsList({
                               <div
                                 key={key}
                                 className="cred-container flex justify-between">
-                                <div className="cred-key text-black transition duration-300 dark:text-gray-200">
+                                <div className="cred-key mr-5 text-black transition duration-300 dark:text-gray-200">
                                   {key}
                                 </div>
                                 <div className="flex">
