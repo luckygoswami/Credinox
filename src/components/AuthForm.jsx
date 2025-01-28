@@ -8,6 +8,7 @@ function AuthForm({
   setUserPassword,
   handleSignIn,
   handleSignUp,
+  demoSignIn,
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
 
@@ -27,7 +28,7 @@ function AuthForm({
 
   return (
     <div className="flex items-center justify-center p-3 sm:w-[60%]">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md transition duration-300">
+      <div className="auth-form bg-white dark:bg-gray-800 pt-8 pb-6 px-8 rounded-lg shadow-lg w-full max-w-md transition duration-300">
         <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-6 transition duration-300">
           Sign In / Sign Up
         </h2>
@@ -45,16 +46,23 @@ function AuthForm({
             passVisibility={passVisibility}
             setPassVisibility={setPassVisibility}
           />
-          <div className="flex justify-between space-x-2">
+          <div className="flex flex-col justify-between space-y-2">
+            <div className="flex justify-between space-x-2">
+              <button
+                onClick={handleSignIn}
+                className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300">
+                Sign In
+              </button>
+              <button
+                onClick={handleSignUp}
+                className="w-full bg-indigo-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300">
+                Sign Up
+              </button>
+            </div>
             <button
-              onClick={handleSignIn}
-              className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300">
-              Sign In
-            </button>
-            <button
-              onClick={handleSignUp}
-              className="w-full bg-indigo-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-600 transition duration-300">
-              Sign Up
+              onClick={demoSignIn}
+              className="w-full bg-green-500 dark:bg-green-700 text-white py-2 rounded-lg font-semibold hover:bg-green-600 dark:hover:bg-green-800 transition duration-300">
+              Access with Demo Account
             </button>
           </div>
         </div>

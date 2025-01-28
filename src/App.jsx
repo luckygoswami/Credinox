@@ -89,6 +89,21 @@ function App() {
       });
   };
 
+  const demoSignIn = () => {
+    signInWithEmailAndPassword(
+      auth,
+      import.meta.env.VITE_DEMOACCOUNT_MAIL,
+      import.meta.env.VITE_DEMOACCOUNT_PASSWORD
+    )
+      .then(() => {
+        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+  };
+
   const encryptPassword = (password) => {
     return CryptoJS.AES.encrypt(password, ENCRYPTION_KEY).toString();
   };
@@ -204,6 +219,7 @@ function App() {
     setUserPassword,
     handleSignIn,
     handleSignUp,
+    demoSignIn,
   };
 
   function ClickHoldButton() {
