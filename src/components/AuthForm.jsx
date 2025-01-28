@@ -50,7 +50,7 @@ function AuthForm({
             <div className="flex justify-between space-x-2">
               <button
                 onClick={handleSignIn}
-                className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300">
+                className="w-full bg-green-500 dark:bg-green-700 text-white py-2 rounded-lg font-semibold hover:bg-green-600 dark:hover:bg-green-800 transition duration-300">
                 Sign In
               </button>
               <button
@@ -61,7 +61,7 @@ function AuthForm({
             </div>
             <button
               onClick={demoSignIn}
-              className="w-full bg-green-500 dark:bg-green-700 text-white py-2 rounded-lg font-semibold hover:bg-green-600 dark:hover:bg-green-800 transition duration-300">
+              className="w-full bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300">
               Access with Demo Account
             </button>
           </div>
