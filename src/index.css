@@ -14,3 +14,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #595ab8;
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
