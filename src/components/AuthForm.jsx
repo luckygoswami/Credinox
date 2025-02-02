@@ -20,6 +20,7 @@ export default function AuthForm({
   handleSignIn,
   handleSignUp,
   demoSignIn,
+  handleForgotPassword,
   className,
   ...props
 }) {
@@ -66,6 +67,11 @@ export default function AuthForm({
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
+                    <a
+                      onClick={handleForgotPassword}
+                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline cursor-pointer select-none">
+                      Forgot your password?
+                    </a>
                   </div>
                   <div className="relative">
                     <Input
@@ -112,7 +118,7 @@ export default function AuthForm({
                   : `Don't have an account? `}
                 <a
                   onClick={() => setRegister(!register)}
-                  className="underline underline-offset-4 cursor-pointer">
+                  className="underline underline-offset-4 cursor-pointer select-none">
                   {register ? 'Login' : 'Sign Up'}
                 </a>
               </div>

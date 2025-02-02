@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import {
   collection,
@@ -73,8 +74,8 @@ function App() {
     try {
       await createUserWithEmailAndPassword(auth, userEmail, userPassword);
     } catch (error) {
-      console.error('Error signing up', error);
-      toast.error('Error signing up!');
+      console.error('Error signing up!', error);
+      toast.error(error.message);
     }
   };
 
@@ -84,7 +85,7 @@ function App() {
         localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
       })
       .catch((error) => {
-        console.log(error);
+        console.log('Error signing in!', error);
         toast.error(error.message);
       });
   };
@@ -119,6 +120,16 @@ function App() {
     await signOut(auth);
     localStorage.removeItem('credinoxLastLoginTime');
     setUserPassword('');
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, userEmail);
+      toast.success('Password reset email sent successfully!');
+    } catch (error) {
+      console.error('Error sending password reset email', error);
+      toast.error(error.message);
+    }
   };
 
   const savePassword = async (extraFields = {}) => {
@@ -220,6 +231,7 @@ function App() {
     handleSignIn,
     handleSignUp,
     demoSignIn,
+    handleForgotPassword,
   };
 
   function ClickHoldButton() {
