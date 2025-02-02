@@ -34,12 +34,12 @@ export default function AuthForm({
           className
         )}
         {...props}>
-        <Card>
+        <Card className="bg-white dark:bg-gray-800 transition duration-300">
           <CardHeader>
             <CardTitle className="text-2xl">
               {register ? 'Sign Up' : 'Login'}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="transition duration-300">
               Enter email and password to{' '}
               {register ? `create a new account` : `login to your account`}
             </CardDescription>
@@ -54,6 +54,7 @@ export default function AuthForm({
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
+                    className="text-gray-900 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition duration-300"
                     id="email"
                     type="email"
                     placeholder="yourname@mail.com"
@@ -68,6 +69,7 @@ export default function AuthForm({
                   </div>
                   <div className="relative">
                     <Input
+                      className="text-gray-900 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 transition duration-300"
                       id="password"
                       type={passVisibility ? 'text' : 'password'}
                       value={userPassword}
@@ -87,12 +89,18 @@ export default function AuthForm({
                   </div>
                 </div>
                 <Button
+                  variant="blue"
                   type="submit"
                   className="w-full">
                   {register ? 'Sign Up' : 'Login'}
                 </Button>
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-zinc-200 dark:after:border-zinc-600 transition duration-300 after:transition after:duration-300">
+                  <span className="relative z-10 bg-white px-2 text-zinc-500 dark:bg-gray-800 dark:text-zinc-400 transition duration-300">
+                    Or continue with
+                  </span>
+                </div>
                 <Button
-                  variant="outline"
+                  variant="neutral"
                   onClick={demoSignIn}
                   className="w-full">
                   Login with Demo Account
