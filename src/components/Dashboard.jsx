@@ -61,7 +61,7 @@ function Dashboard({
             id="logout-btn"
             onClick={handleLogout}
             className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
-            Logout
+            Sign out
           </button>
         </div>
 

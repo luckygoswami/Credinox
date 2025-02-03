@@ -6,6 +6,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import {
   collection,
@@ -39,6 +41,20 @@ function App() {
 
   const { setCurrentCredential, themeMode } = useContext(UserContext);
   const { theme, setTheme } = useTheme();
+
+  const googleProvider = new GoogleAuthProvider();
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      setUser(user);
+      toast.success('Signed in with Google successfully!');
+    } catch (error) {
+      console.error('Error signing in with Google', error);
+      toast.error('Error signing in with Google');
+    }
+  };
 
   const checkSession = useCallback(() => {
     const lastLoginTime = localStorage.getItem('credinoxLastLoginTime');
@@ -231,6 +247,7 @@ function App() {
     handleSignIn,
     handleSignUp,
     demoSignIn,
+    handleGoogleSignIn,
     handleForgotPassword,
   };
 
@@ -291,7 +308,7 @@ function App() {
 
   return (
     <div className="sm:h-screen bg-gray-50 dark:bg-gray-900 grid grid-rows-[auto_1fr_auto] transition duration-300">
-      <header className="bg-indigo-500 dark:bg-indigo-700 py-4 shadow-md transition duration-300">
+      <header className="bg-indigo-500 dark:bg-indigo-700 py-2 shadow-md transition duration-300">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl font-bold text-white">
             Credinox&nbsp;
@@ -301,7 +318,7 @@ function App() {
         </div>
       </header>
 
-      <main className="container mx-auto sm:my-10 flex flex-col sm:flex-row justify-between sm:px-10 overflow-auto">
+      <main className="container mx-auto sm:my-2 flex flex-col sm:flex-row justify-between sm:px-10 overflow-auto">
         {user ? <Dashboard {...DashboardProps} /> : <AuthForm {...AuthProps} />}
         <PasswordGenerator />
       </main>
