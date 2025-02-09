@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.15.0] - 2025-02-03
+
+### Added
+
+- Add sign-in with Google option.
+- Add forgot password option.
+
+### Changed
+
+- Optimize auth page for dark theme.
+- Redesign auth page with `shadcn-ui`.
+- Add `shadcn-ui` component library.
+- Change sign-in and demo login button colors.
+
+## [4.14.0] - 2025-01-28
+
+### Added
+
+- Add demo account login button.
+- Add shortcut to focus search box by pressing `/`.
+- Increase session time limit for development environment.
+
+### Changed
+
+- Configure `Changelog.md`.
+
+### Fixed
+
+- Fix session timeout not working.
+- Fix div not expanding for long service names or users.
+- Fix uncleared edit fields after relogin.
+- Fix scroll-to-top bug.
+
+## [4.13.0] - 2024-11-17
+
+### Added
+
+- Scroll to top on clicking the edit button.
+
+### Changed
+
+- Change info toasts to `toast.info`.
+- Show current version on hovering over "Credinox" in the footer.
+
+### Fixed
+
+- Errors due to `ToastContainer` conflicts.
+
 ## [4.11.0] - 2024-11-16
 
 ## Added
