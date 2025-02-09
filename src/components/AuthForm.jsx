@@ -22,11 +22,12 @@ export default function AuthForm({
   demoSignIn,
   handleGoogleSignIn,
   handleForgotPassword,
+  register,
+  setRegister,
   className,
   ...props
 }) {
   const [passVisibility, setPassVisibility] = useState(false);
-  const [register, setRegister] = useState(false);
 
   return (
     <div className="flex items-center justify-center p-3 sm:w-[60%]">
