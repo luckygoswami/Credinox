@@ -8,6 +8,7 @@ import {
   sendPasswordResetEmail,
   GoogleAuthProvider,
   signInWithPopup,
+  sendEmailVerification,
 } from 'firebase/auth';
 import {
   collection,
@@ -37,12 +38,23 @@ function App() {
   const [newPassword, setNewPassword] = useState('');
   const [service, setService] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [register, setRegister] = useState(false);
   const [userPassword, setUserPassword] = useState('');
 
   const { setCurrentCredential, themeMode } = useContext(UserContext);
   const { theme, setTheme } = useTheme();
 
   const googleProvider = new GoogleAuthProvider();
+
+  const handleEmailVerification = async () => {
+    try {
+      await sendEmailVerification(auth.currentUser);
+      toast.success('Verify the email sent to you to continue using Credinox!');
+    } catch (error) {
+      console.error('Error sending email verification', error);
+      toast.error(error.message);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -66,9 +78,13 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        checkSession();
-        setUser(currentUser);
-        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+        if (currentUser.emailVerified) {
+          checkSession();
+          setUser(currentUser);
+          localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+        } else {
+          handleEmailVerification();
+        }
       } else {
         setUser(null);
         localStorage.removeItem('credinoxLastLoginTime');
@@ -89,6 +105,8 @@ function App() {
   const handleSignUp = async () => {
     try {
       await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+      setRegister(false);
+      handleLogout();
     } catch (error) {
       console.error('Error signing up!', error);
       toast.error(error.message);
@@ -249,6 +267,8 @@ function App() {
     demoSignIn,
     handleGoogleSignIn,
     handleForgotPassword,
+    register,
+    setRegister,
   };
 
   function ClickHoldButton() {
