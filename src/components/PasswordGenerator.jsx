@@ -10,6 +10,90 @@ function PasswordGenerator() {
 
   const passwordRef = useRef(null);
 
+  const presets = {
+    strong: {
+      name: 'Strong',
+      length: 16,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: true,
+    },
+    medium: {
+      name: 'Medium',
+      length: 12,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: false,
+    },
+    weak: {
+      name: 'Weak',
+      length: 8,
+      uppercaseAllowed: false,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: false,
+    },
+    UPI_PIN: {
+      name: 'UPI PIN',
+      length: 6,
+      uppercaseAllowed: false,
+      lowercaseAllowed: false,
+      numberAllowed: true,
+      charAllowed: false,
+    },
+    alphanumeric: {
+      name: 'Alphanumeric',
+      length: 10,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: false,
+    },
+    complex: {
+      name: 'Complex',
+      length: 20,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: true,
+    },
+    wifi_password: {
+      name: 'WiFi Password',
+      length: 12,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: true,
+    },
+    social_media: {
+      name: 'Social Media',
+      length: 14,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: true,
+    },
+    email_account: {
+      name: 'Email Account',
+      length: 16,
+      uppercaseAllowed: true,
+      lowercaseAllowed: true,
+      numberAllowed: true,
+      charAllowed: true,
+    },
+  };
+
+  const handlePresetChange = (preset) => {
+    const config = presets[preset];
+    setLength(config.length);
+    setUppercaseAllowed(config.uppercaseAllowed);
+    setLowercaseAllowed(config.lowercaseAllowed);
+    setNumberAllowed(config.numberAllowed);
+    setCharAllowed(config.charAllowed);
+  };
+
   const passwordGenerator = useCallback(() => {
     let pass = '';
     let str = '';
@@ -19,9 +103,14 @@ function PasswordGenerator() {
     if (numberAllowed) str += '0123456789';
     if (charAllowed) str += '!@#$%&*_';
 
-    for (let i = 1; i <= length; i++) {
-      let char = Math.floor(Math.random() * str.length + 1);
-      pass += str.charAt(char);
+    if (!str) {
+      alert('Please select at least one character type');
+      return;
+    }
+
+    while (pass.length < length) {
+      let charIndex = Math.floor(Math.random() * str.length);
+      pass += str.charAt(charIndex);
     }
 
     setPassword(pass);
@@ -52,7 +141,7 @@ function PasswordGenerator() {
 
   return (
     <div className="w-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto flex justify-center">
-      <div className="w-full h-full pt-5 pb-3 px-5 flex flex-col justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-white transition duration-300 dark:bg-gray-800 dark:text-orange-500 overflow-auto">
+      <div className="w-full h-full py-2 px-5 flex flex-col gap-4 justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-white transition duration-300 dark:bg-gray-800 dark:text-orange-500 overflow-auto">
         {/* Header */}
         <h1 className="text-center text-lg font-semibold text-gray-700 transition duration-300 dark:text-white">
           🔐 Random Password Generator
@@ -76,18 +165,18 @@ function PasswordGenerator() {
         </div>
 
         {/* Password Options */}
-        <div className="password-options flex flex-col text-sm gap-y-4 text-gray-700 transition duration-300 dark:text-gray-300">
+        <div className="password-options flex flex-col text-sm gap-y-2 text-gray-700 transition duration-300 dark:text-gray-300">
           {/* Password Length */}
           <div className="flex items-center justify-between gap-x-2">
             <label className="flex items-center gap-x-2 w-full">
               <span>Length:</span>
               <input
                 type="range"
-                min={6}
+                min={4}
                 max={32}
                 value={length}
                 className="cursor-pointer accent-orange-500 w-full"
-                onChange={(e) => setLength(e.target.value)}
+                onChange={(e) => setLength(Number(e.target.value))}
               />
             </label>
             <span className="font-semibold">{length}</span>
@@ -156,6 +245,18 @@ function PasswordGenerator() {
               Include Lowercase Letters (a-z)
             </label>
           </div>
+        </div>
+
+        {/* Presets */}
+        <div className="presets-container flex flex-wrap">
+          {Object.keys(presets).map((preset) => (
+            <button
+              key={preset}
+              onClick={() => handlePresetChange(preset)}
+              className="flex flex-grow justify-center bg-orange-500 hover:bg-orange-400 transition text-white text-center m-0.5 py-1 px-2 rounded-lg size-0.75 font-semibold">
+              {presets[preset].name}
+            </button>
+          ))}
         </div>
 
         {/* Generate Password Button */}
