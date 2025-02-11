@@ -255,6 +255,8 @@ function App() {
     decryptPassword,
     handleDelete,
     handleUpdate,
+    theme,
+    setTheme,
   };
 
   const AuthProps = {

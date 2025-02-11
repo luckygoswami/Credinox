@@ -3,6 +3,23 @@ import EditCredentialForm from './EditCredentialForm';
 import UserContext from '../context/UserContext';
 import CredentialsList from './CredentialsList';
 import NewCredentialForm from './NewCredentialForm';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 
 const reservedKeywords = [
   'id',
@@ -25,6 +42,8 @@ function Dashboard({
   decryptPassword,
   handleDelete,
   handleUpdate,
+  theme,
+  setTheme,
 }) {
   const { currentCredential } = useContext(UserContext);
 
@@ -57,12 +76,67 @@ function Dashboard({
           <h2 className="text-2xl font-bold text-gray-800 transition duration-300 dark:text-gray-200">
             {user.email}
           </h2>
-          <button
-            id="logout-btn"
-            onClick={handleLogout}
-            className="sm:px-4 sm:py-2 px-2 py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
-            Sign out
-          </button>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-list"
+                  viewBox="0 0 16 16">
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+                  />
+                </svg>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-[70%_30%] items-center">
+                    <Label htmlFor="logout-btn">Log out from this device</Label>
+                    <button
+                      id="logout-btn"
+                      onClick={handleLogout}
+                      className="bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
+                      Log out
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-[70%_30%] items-center">
+                    <Label htmlFor="theme">Change Theme mode</Label>
+                    <DropdownMenu id="theme">
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                          {theme.charAt(0).toUpperCase() + theme.substring(1)}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>Select Theme</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuRadioGroup
+                          value={theme}
+                          onValueChange={setTheme}>
+                          <DropdownMenuRadioItem value="light">
+                            Light
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="dark">
+                            Dark
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="system">
+                            System Default
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         {/* Credentials operations */}
