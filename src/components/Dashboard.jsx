@@ -81,8 +81,9 @@ function Dashboard({
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline">
+              <Button variant="neutral">
                 <svg
+                  fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16">
                   <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
@@ -97,7 +98,7 @@ function Dashboard({
                     <button
                       id="logout-btn"
                       onClick={handleLogout}
-                      className="bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
+                      className="py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
                       Log out
                     </button>
                   </div>
@@ -105,23 +106,29 @@ function Dashboard({
                     <Label htmlFor="theme">Change Theme mode</Label>
                     <DropdownMenu id="theme">
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline">
+                        <Button variant="neutral">
                           {theme.charAt(0).toUpperCase() + theme.substring(1)}
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
+                      <DropdownMenuContent className="w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg text-gray-800 dark:text-gray-200 transition duration-300">
                         <DropdownMenuLabel>Select Theme</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
                         <DropdownMenuRadioGroup
                           value={theme}
                           onValueChange={setTheme}>
-                          <DropdownMenuRadioItem value="light">
+                          <DropdownMenuRadioItem
+                            className="dark:focus:bg-gray-700"
+                            value="light">
                             Light
                           </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="dark">
+                          <DropdownMenuRadioItem
+                            className="dark:focus:bg-gray-700"
+                            value="dark">
                             Dark
                           </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="system">
+                          <DropdownMenuRadioItem
+                            className="dark:focus:bg-gray-700"
+                            value="system">
                             System Default
                           </DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
