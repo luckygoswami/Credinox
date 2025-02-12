@@ -140,7 +140,7 @@ function PasswordGenerator() {
   ]);
 
   return (
-    <div className="w-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto flex justify-center">
+    <div className="w-full h-full sm:w-[30%] p-3 min-h-[400px] sm:h-auto flex justify-center">
       <div className="w-full h-full py-2 px-5 flex flex-col gap-4 justify-between max-w-md shadow-lg rounded-lg text-orange-500 bg-white transition duration-300 dark:bg-gray-800 dark:text-orange-500 overflow-auto">
         {/* Header */}
         <h1 className="text-center text-lg font-semibold text-gray-700 transition duration-300 dark:text-white">
