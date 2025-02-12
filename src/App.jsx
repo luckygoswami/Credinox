@@ -17,6 +17,8 @@ import {
   addDoc,
   getDocs,
   deleteDoc,
+  getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import CryptoJS from 'crypto-js';
 
@@ -40,6 +42,7 @@ function App() {
   const [userEmail, setUserEmail] = useState('');
   const [register, setRegister] = useState(false);
   const [userPassword, setUserPassword] = useState('');
+  const [googleSignIn, setGoogleSignIn] = useState(true);
 
   const { setCurrentCredential, themeMode } = useContext(UserContext);
   const { theme, setTheme } = useTheme();
@@ -58,10 +61,8 @@ function App() {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      setUser(user);
-      toast.success('Signed in with Google successfully!');
+      await signInWithPopup(auth, googleProvider);
+      localStorage.setItem('signInMethod', 'google');
     } catch (error) {
       console.error('Error signing in with Google', error);
       toast.error('Error signing in with Google');
@@ -76,14 +77,41 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        if (currentUser.emailVerified) {
-          checkSession();
-          setUser(currentUser);
-          localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+        const docRef = doc(db, 'users', currentUser.uid);
+        const docSnap = await getDoc(docRef);
+
+        // set the googleSignin flag in Firestore
+        if (!docSnap.exists()) {
+          await setDoc(docRef, { googleSignin: googleSignIn });
         } else {
-          handleEmailVerification();
+          if (!docSnap.data().hasOwnProperty('googleSignin')) {
+            await updateDoc(docRef, { googleSignin: googleSignIn });
+          } else {
+            setGoogleSignIn(docSnap.data().googleSignin);
+          }
+        }
+
+        // Login user according to their account configuration
+        if (
+          localStorage.getItem('signInMethod') === 'google' &&
+          !(await getDoc(docRef)).data().googleSignin
+        ) {
+          handleLogout();
+          toast.error('Google Sign In is disabled for this account!');
+        } else {
+          if (currentUser.emailVerified) {
+            checkSession();
+            setUser(currentUser);
+            localStorage.setItem(
+              'credinoxLastLoginTime',
+              Date.now().toString()
+            );
+          } else {
+            await handleEmailVerification();
+            await handleLogout();
+          }
         }
       } else {
         setUser(null);
@@ -102,11 +130,20 @@ function App() {
     }
   }, [user, checkSession]);
 
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        await updateDoc(doc(db, 'users', user.uid), {
+          googleSignin: googleSignIn,
+        });
+      }
+    })();
+  }, [googleSignIn]);
+
   const handleSignUp = async () => {
     try {
       await createUserWithEmailAndPassword(auth, userEmail, userPassword);
       setRegister(false);
-      handleLogout();
     } catch (error) {
       console.error('Error signing up!', error);
       toast.error(error.message);
@@ -116,7 +153,7 @@ function App() {
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, userEmail, userPassword)
       .then(() => {
-        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+        localStorage.setItem('signInMethod', 'email');
       })
       .catch((error) => {
         console.log('Error signing in!', error);
@@ -131,7 +168,7 @@ function App() {
       import.meta.env.VITE_DEMOACCOUNT_PASSWORD
     )
       .then(() => {
-        localStorage.setItem('credinoxLastLoginTime', Date.now().toString());
+        toast.success('Signed in successfully with Demo account!');
       })
       .catch((error) => {
         console.log(error);
@@ -153,6 +190,7 @@ function App() {
     setCredentials([]);
     await signOut(auth);
     localStorage.removeItem('credinoxLastLoginTime');
+    localStorage.removeItem('signInMethod');
     setUserPassword('');
   };
 
@@ -257,6 +295,8 @@ function App() {
     handleUpdate,
     theme,
     setTheme,
+    googleSignIn,
+    setGoogleSignIn,
   };
 
   const AuthProps = {
