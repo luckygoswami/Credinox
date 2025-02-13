@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 
 const getDateAndTime = (timestamp) => {
   const dateAndTime = new Date(timestamp);
@@ -61,6 +62,30 @@ function CredentialsList({
   const [openIndex, setOpenIndex] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState('');
 
+  const handleExport = () => {
+    const credData = credentials.map((cred) => ({
+      ...cred,
+      password: cred.password ? decryptPassword(cred.password) : cred.password,
+      createdAt: getDateAndTime(cred.createdAt),
+      updatedAt: getDateAndTime(cred.updatedAt),
+    }));
+
+    const dataBlob = new Blob([JSON.stringify(credData, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(dataBlob);
+
+    // Create a temporary link and trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'credentials.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
   // Function to toggle open/close of a credential
   const toggleExpand = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -68,9 +93,16 @@ function CredentialsList({
 
   return (
     <div className="creds-container">
-      <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300">
-        Your Saved Credentials
-      </h3>
+      <div className="flex justify-between items-end">
+        <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300">
+          Your Saved Credentials
+        </h3>
+        <Button
+          variant="neutral"
+          onClick={handleExport}>
+          Export All
+        </Button>
+      </div>
       <SearchInput
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
