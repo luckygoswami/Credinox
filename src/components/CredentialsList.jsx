@@ -97,11 +97,13 @@ function CredentialsList({
         <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300">
           Your Saved Credentials
         </h3>
-        <Button
-          variant="neutral"
-          onClick={handleExport}>
-          Export All
-        </Button>
+        {!credentials.length || (
+          <Button
+            variant="neutral"
+            onClick={handleExport}>
+            Export All
+          </Button>
+        )}
       </div>
       <SearchInput
         searchKeyword={searchKeyword}
