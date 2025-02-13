@@ -167,11 +167,12 @@ function CredentialsList({
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
+                                  variant="destructive"
                                   onClick={() => {
                                     setOpenIndex(null);
                                     handleDelete(credential.id);
                                   }}>
-                                  Continue
+                                  Delete
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
