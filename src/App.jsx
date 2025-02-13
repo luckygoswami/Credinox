@@ -227,21 +227,13 @@ function App() {
   };
 
   const handleDelete = async (credentialId, credentialName) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete '${credentialName}' credentials?`
-      )
-    ) {
-      try {
-        await deleteDoc(
-          doc(db, 'users', user.uid, 'credentials', credentialId)
-        );
-        toast.success('Credential Deleted successfully!');
-        fetchPasswords();
-      } catch (error) {
-        console.error('Error deleting credential', error);
-        toast.error('Error deleting credential!');
-      }
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'credentials', credentialId));
+      toast.success('Credential Deleted successfully!');
+      fetchPasswords();
+    } catch (error) {
+      console.error('Error deleting credential', error);
+      toast.error('Error deleting credential!');
     }
   };
 

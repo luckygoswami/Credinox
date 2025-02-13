@@ -1,6 +1,17 @@
 import React, { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import SearchInput from './SearchInput';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const getDateAndTime = (timestamp) => {
   const dateAndTime = new Date(timestamp);
@@ -103,14 +114,34 @@ function CredentialsList({
                           <i className="bi bi-pencil-square"></i>
                         </button>
                         {!currentCredential && (
-                          <button
-                            onClick={() => {
-                              setOpenIndex(null);
-                              handleDelete(credential.id, credential.service);
-                            }}
-                            id="dlt-btn">
-                            <i className="bi bi-trash3-fill"></i>
-                          </button>
+                          <AlertDialog>
+                            <AlertDialogTrigger id="dlt-btn">
+                              <i className="bi bi-trash3-fill"></i>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will
+                                  permanently delete{' '}
+                                  <strong>{credential.service}</strong>{' '}
+                                  credentials and remove it from the database.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    setOpenIndex(null);
+                                    handleDelete(credential.id);
+                                  }}>
+                                  Continue
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         )}
                         <button>
                           <i
