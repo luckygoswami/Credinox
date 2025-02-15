@@ -254,7 +254,7 @@ function CredentialsList({
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
+                                <AlertDialogTitle className="dark:text-white">
                                   Are you absolutely sure?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
