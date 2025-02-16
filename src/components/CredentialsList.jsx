@@ -1,7 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import UserContext from '../context/UserContext';
-import SearchInput from './SearchInput';
-import { Copy } from 'lucide-react';
+import CryptoJS from 'crypto-js';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,8 +18,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Copy } from 'lucide-react';
+import SearchInput from './SearchInput';
+import UserContext from '../context/UserContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+
+const HMAC_key = import.meta.env.VITE_HMAC_KEY;
+
+const generateHMAC = (data) => {
+  return CryptoJS.HmacSHA256(String(data), HMAC_key).toString();
+};
 
 const getDateAndTime = (timestamp) => {
   const dateAndTime = new Date(timestamp);
@@ -82,7 +89,13 @@ function CredentialsList({
       updatedAt: getDateAndTime(cred.updatedAt),
     }));
 
-    const dataBlob = new Blob([JSON.stringify(credData, null, 2)], {
+    const exportData = {
+      note: '⚠️ WARNING: Do NOT modify this file! Any change (even a single letter) will make it NON-IMPORTABLE.',
+      data: credData,
+      hash: generateHMAC(credData),
+    };
+
+    const dataBlob = new Blob([JSON.stringify(exportData, null, 2)], {
       type: 'application/json',
     });
     const url = URL.createObjectURL(dataBlob);
