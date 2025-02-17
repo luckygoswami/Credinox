@@ -19,6 +19,7 @@ import {
   deleteDoc,
   getDoc,
   updateDoc,
+  writeBatch,
 } from 'firebase/firestore';
 import CryptoJS from 'crypto-js';
 
@@ -226,7 +227,26 @@ function App() {
     }
   };
 
-  const handleDelete = async (credentialId, credentialName) => {
+  const handleImport = (data) => {
+    const batch = writeBatch(db);
+
+    data.forEach((cred) => {
+      const docRef = doc(db, 'users', user.uid, 'credentials', cred.id);
+      batch.set(docRef, cred);
+    });
+
+    batch
+      .commit()
+      .then(() => {
+        toast.success('Imported credentials successfully!');
+        fetchPasswords();
+      })
+      .catch((error) => {
+        toast.success('Error while importing credendtials:', error.message);
+      });
+  };
+
+  const handleDelete = async (credentialId) => {
     try {
       await deleteDoc(doc(db, 'users', user.uid, 'credentials', credentialId));
       toast.success('Credential Deleted successfully!');
@@ -280,6 +300,7 @@ function App() {
     newPassword,
     setNewPassword,
     savePassword,
+    handleImport,
     credentials,
     encryptPassword,
     decryptPassword,

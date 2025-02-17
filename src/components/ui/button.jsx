@@ -20,7 +20,7 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-50',
         neutral:
-          'border border-zinc-200 bg-white shadom-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:text-zinc-50 dark:hover:bg-gray-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 transition duration-300',
+          'border border-zinc-200 bg-white shadow-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:text-zinc-50 dark:hover:bg-gray-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 transition duration-300',
         link: 'text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50',
         blue: 'bg-indigo-500 text-white hover:bg-indigo-600 transition duration-300',
       },

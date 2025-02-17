@@ -2,12 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.0] - 2025-02-17
+
+### Added
+
+- Import data button.
+- Share button for individual credential.
+- Export data button.
+- Toggle button for enabling/disabling Google sign-in.
+- Dropdown hamburger menu in the dashboard for more options.
+- Add password presets and improve password generation logic.
+- Verify email before sign-in.
+
+### Changed
+
+- Optimize share and delete confirmation dialogs for dark mode.
+- Change `AlertDialogAction` styling for the delete button.
+- Hide export data button when no credentials are saved.
+- Change delete confirmation prompt to `shadcn/alert-dialog`.
+- Update dark mode classes in the "More Options" hamburger.
+- Add hash key in exported data.
+
+### Fixed
+
+- Password input not showing in the password generator after login.
+
 ## [4.15.0] - 2025-02-03
 
 ### Added
 
-- Add sign-in with Google option.
-- Add forgot password option.
+- Sign-in with Google option.
+- Forgot password option.
 
 ### Changed
 

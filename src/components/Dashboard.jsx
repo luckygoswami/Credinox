@@ -19,7 +19,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { toast } from 'react-toastify';
 import { Switch } from '@/components/ui/switch';
+import CryptoJS from 'crypto-js';
+
+const HMAC_key = import.meta.env.VITE_HMAC_KEY;
 
 const reservedKeywords = [
   'id',
@@ -29,6 +33,26 @@ const reservedKeywords = [
   'updatedAt',
 ];
 
+const generateHMAC = (data) => {
+  return CryptoJS.HmacSHA256(JSON.stringify(data), HMAC_key).toString();
+};
+
+const getDateAndTime = (timestamp) => {
+  const dateAndTime = new Date(timestamp);
+  const fullDate = dateAndTime.toDateString();
+  const fullTime = dateAndTime.toLocaleTimeString();
+  return `${fullTime} on ${fullDate}`;
+};
+
+const parseDateAndTime = (dateTimeString) => {
+  const [time, date] = dateTimeString.split(' on ');
+
+  const fullDateTimeString = `${date} ${time}`;
+  const timestamp = new Date(fullDateTimeString).getTime();
+
+  return isNaN(timestamp) ? null : timestamp;
+};
+
 function Dashboard({
   user,
   handleLogout,
@@ -37,6 +61,7 @@ function Dashboard({
   newPassword,
   setNewPassword,
   savePassword,
+  handleImport,
   credentials,
   encryptPassword,
   decryptPassword,
@@ -48,6 +73,76 @@ function Dashboard({
   setGoogleSignIn,
 }) {
   const { currentCredential } = useContext(UserContext);
+
+  const handleExport = () => {
+    const credData = credentials.map((cred) => ({
+      ...cred,
+      password: cred.password ? decryptPassword(cred.password) : cred.password,
+      createdAt: getDateAndTime(cred.createdAt),
+      updatedAt: getDateAndTime(cred.updatedAt),
+    }));
+
+    const exportData = {
+      note: '⚠️ WARNING: Do NOT modify this file! Any change (even a single letter) will make it NON-IMPORTABLE.',
+      data: credData,
+      hash: generateHMAC(credData),
+    };
+
+    const dataBlob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(dataBlob);
+
+    // Create a temporary link and trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'credentials.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
+  const handleFile = (file) => {
+    if (file.type !== 'application/json') {
+      toast.error('❌ Only JSON files (.json) are allowed!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = () => {
+      try {
+        const parsedData = JSON.parse(reader.result);
+
+        parsedData.hash == generateHMAC(parsedData.data)
+          ? encryptData(parsedData.data)
+          : toast.error(
+              '⚠️ Data integrity check failed! The file appears to be tampered with.'
+            );
+      } catch (error) {
+        toast.error('❌ Invalid JSON file. Please check the file format.');
+      }
+    };
+
+    reader.onerror = () => {
+      toast.error('❌ Failed to read the file. Please try again.');
+    };
+  };
+
+  const encryptData = (data) => {
+    data.forEach((cred) => {
+      if (cred.password) {
+        cred.password = encryptPassword(cred.password);
+      }
+      cred.createdAt = parseDateAndTime(cred.createdAt);
+      cred.updatedAt = parseDateAndTime(cred.updatedAt);
+    });
+
+    handleImport(data);
+  };
 
   const NewCredentialFormProps = {
     service,
@@ -66,8 +161,9 @@ function Dashboard({
   const CredentialsListProps = {
     credentials,
     reservedKeywords,
-    handleDelete,
+    getDateAndTime,
     decryptPassword,
+    handleDelete,
   };
 
   return (
@@ -94,13 +190,50 @@ function Dashboard({
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <div className="grid grid-cols-[70%_30%] items-center">
-                    <Label htmlFor="logout-btn">Log out from this device</Label>
-                    <button
-                      id="logout-btn"
-                      onClick={handleLogout}
-                      className="py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
-                      Log out
-                    </button>
+                    <Label htmlFor="toggleGoogleSignin">
+                      {googleSignIn ? 'Disable' : 'Enable'} Sign In with Google{' '}
+                    </Label>
+                    <Switch
+                      id="toggleGoogleSignin"
+                      checked={googleSignIn}
+                      onCheckedChange={setGoogleSignIn}
+                    />
+                  </div>
+                  {!credentials.length || (
+                    <div className="grid grid-cols-[70%_30%] items-center">
+                      <Label htmlFor="logout-btn">
+                        Export credentials to JSON
+                      </Label>
+                      <Button
+                        variant="neutral"
+                        onClick={handleExport}>
+                        Export
+                      </Button>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-[70%_30%] items-center">
+                    <Label htmlFor="logout-btn">
+                      Import credentials from JSON
+                    </Label>
+                    <>
+                      <label
+                        role="button"
+                        tabIndex={0}
+                        htmlFor="cred-input"
+                        className="flex items-center justify-center rounded-md font-medium text-sm h-9 px-4 py-2 cursor-pointer border border-zinc-200 bg-white shadow-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:text-zinc-50 dark:hover:bg-gray-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 transition duration-300 whitespace-nowrap">
+                        Import
+                      </label>
+                      <input
+                        accept="application/json"
+                        id="cred-input"
+                        className="hidden"
+                        type="file"
+                        onChange={(e) => {
+                          handleFile(e.target.files[0]);
+                          e.target.value = '';
+                        }}
+                      />
+                    </>
                   </div>
                   <div className="grid grid-cols-[70%_30%] items-center">
                     <Label htmlFor="theme">Change Theme mode</Label>
@@ -136,14 +269,13 @@ function Dashboard({
                     </DropdownMenu>
                   </div>
                   <div className="grid grid-cols-[70%_30%] items-center">
-                    <Label htmlFor="toggleGoogleSignin">
-                      {googleSignIn ? 'Disable' : 'Enable'} Sign In with Google{' '}
-                    </Label>
-                    <Switch
-                      id="toggleGoogleSignin"
-                      checked={googleSignIn}
-                      onCheckedChange={setGoogleSignIn}
-                    />
+                    <Label htmlFor="logout-btn">Log out from this device</Label>
+                    <button
+                      id="logout-btn"
+                      onClick={handleLogout}
+                      className="py-1 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200">
+                      Log out
+                    </button>
                   </div>
                 </div>
               </div>

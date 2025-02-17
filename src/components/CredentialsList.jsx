@@ -1,5 +1,4 @@
 import React, { useContext, useRef, useState } from 'react';
-import CryptoJS from 'crypto-js';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,19 +22,6 @@ import SearchInput from './SearchInput';
 import UserContext from '../context/UserContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-
-const HMAC_key = import.meta.env.VITE_HMAC_KEY;
-
-const generateHMAC = (data) => {
-  return CryptoJS.HmacSHA256(String(data), HMAC_key).toString();
-};
-
-const getDateAndTime = (timestamp) => {
-  const dateAndTime = new Date(timestamp);
-  const fullDate = dateAndTime.toDateString();
-  const fullTime = dateAndTime.toLocaleTimeString();
-  return `${fullTime} on ${fullDate}`;
-};
 
 const filterData = (data, keyword) => {
   const lowerCaseKeyword = keyword.toLowerCase();
@@ -71,6 +57,7 @@ const handleCopy = (contentEle) => {
 function CredentialsList({
   credentials,
   reservedKeywords,
+  getDateAndTime,
   decryptPassword,
   handleDelete,
 }) {
@@ -80,36 +67,6 @@ function CredentialsList({
   const [shareData, setShareData] = useState('');
   const [textareaRows, setTextareaRows] = useState(0);
   const textareaRef = useRef(null);
-
-  const handleExport = () => {
-    const credData = credentials.map((cred) => ({
-      ...cred,
-      password: cred.password ? decryptPassword(cred.password) : cred.password,
-      createdAt: getDateAndTime(cred.createdAt),
-      updatedAt: getDateAndTime(cred.updatedAt),
-    }));
-
-    const exportData = {
-      note: '⚠️ WARNING: Do NOT modify this file! Any change (even a single letter) will make it NON-IMPORTABLE.',
-      data: credData,
-      hash: generateHMAC(credData),
-    };
-
-    const dataBlob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(dataBlob);
-
-    // Create a temporary link and trigger the download
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'credentials.json';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
-  };
 
   const toggleExpand = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -138,17 +95,10 @@ function CredentialsList({
 
   return (
     <div className="creds-container">
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-end flex-wrap gap-2">
         <h3 className="text-lg font-semibold text-gray-700 transition duration-300 dark:text-gray-300">
           Your Saved Credentials
         </h3>
-        {!credentials.length || (
-          <Button
-            variant="neutral"
-            onClick={handleExport}>
-            Export All
-          </Button>
-        )}
       </div>
       <SearchInput
         searchKeyword={searchKeyword}
