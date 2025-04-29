@@ -415,6 +415,9 @@ function App() {
         </div>
       </footer>
       <ToastContainer
+        toastStyle={{
+          backgroundColor: theme == 'dark' ? '#1f2937' : undefined,
+        }}
         position="top-center"
         closeOnClick={true}
         draggable={true}
