@@ -201,9 +201,7 @@ function Dashboard({
                   </div>
                   {!credentials.length || (
                     <div className="grid grid-cols-[70%_30%] items-center">
-                      <Label htmlFor="logout-btn">
-                        Export credentials to JSON
-                      </Label>
+                      <Label>Export credentials to JSON</Label>
                       <Button
                         variant="neutral"
                         onClick={handleExport}>
@@ -212,9 +210,7 @@ function Dashboard({
                     </div>
                   )}
                   <div className="grid grid-cols-[70%_30%] items-center">
-                    <Label htmlFor="logout-btn">
-                      Import credentials from JSON
-                    </Label>
+                    <Label>Import credentials from JSON</Label>
                     <>
                       <label
                         role="button"
@@ -269,7 +265,7 @@ function Dashboard({
                     </DropdownMenu>
                   </div>
                   <div className="grid grid-cols-[70%_30%] items-center">
-                    <Label htmlFor="logout-btn">Log out from this device</Label>
+                    <Label>Log out from this device</Label>
                     <button
                       id="logout-btn"
                       onClick={handleLogout}
