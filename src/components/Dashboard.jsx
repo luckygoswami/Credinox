@@ -19,6 +19,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
 import { Switch } from '@/components/ui/switch';
 import CryptoJS from 'crypto-js';
@@ -67,6 +77,7 @@ function Dashboard({
   decryptPassword,
   handleDelete,
   handleUpdate,
+  handleUpdatePassword,
   theme,
   setTheme,
   googleSignIn,
@@ -230,6 +241,45 @@ function Dashboard({
                         }}
                       />
                     </>
+                  </div>
+                  <div className="grid grid-cols-[70%_30%] items-center">
+                    <Dialog>
+                      <Label>Change login password</Label>
+                      <DialogTrigger asChild>
+                        <Button variant="neutral">Change</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Update Login Password</DialogTitle>
+                          <DialogDescription>
+                            Update your password to keep your account secure.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label
+                              htmlFor="update-password"
+                              className="text-right">
+                              New Password
+                            </Label>
+                            <Input
+                              id="update-password"
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            onClick={() => {
+                              handleUpdatePassword(
+                                document.getElementById('update-password').value
+                              );
+                            }}>
+                            Update Password
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <div className="grid grid-cols-[70%_30%] items-center">
                     <Label htmlFor="theme">Change Theme mode</Label>

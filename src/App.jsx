@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendEmailVerification,
+  updatePassword,
 } from 'firebase/auth';
 import {
   collection,
@@ -281,6 +282,23 @@ function App() {
     }
   };
 
+  const handleUpdatePassword = async (newPassword) => {
+    if (auth.currentUser.email == 'yourname@mail.com') {
+      toast.error('This is a demo account! You cannot change the password!');
+      return;
+    }
+
+    updatePassword(auth.currentUser, newPassword)
+      .then(() => {
+        toast.success('Password updated successfully!');
+        toast.info('Login again to continue!');
+        handleLogout();
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      });
+  };
+
   const fetchPasswords = useCallback(async () => {
     const querySnapshot = await getDocs(
       collection(db, 'users', user.uid, 'credentials')
@@ -306,6 +324,7 @@ function App() {
     decryptPassword,
     handleDelete,
     handleUpdate,
+    handleUpdatePassword,
     theme,
     setTheme,
     googleSignIn,
