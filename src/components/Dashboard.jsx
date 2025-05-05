@@ -200,7 +200,7 @@ function Dashboard({
             <PopoverContent className="w-80">
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <div className="grid grid-cols-[70%_30%] items-center">
+                  <div className="google-signin grid grid-cols-[70%_30%] items-center">
                     <Label htmlFor="toggleGoogleSignin">
                       {googleSignIn ? 'Disable' : 'Enable'} Sign In with Google{' '}
                     </Label>
@@ -211,7 +211,7 @@ function Dashboard({
                     />
                   </div>
                   {!credentials.length || (
-                    <div className="grid grid-cols-[70%_30%] items-center">
+                    <div className="export-creds grid grid-cols-[70%_30%] items-center">
                       <Label>Export credentials to JSON</Label>
                       <Button
                         variant="neutral"
@@ -220,7 +220,7 @@ function Dashboard({
                       </Button>
                     </div>
                   )}
-                  <div className="grid grid-cols-[70%_30%] items-center">
+                  <div className="import-creds grid grid-cols-[70%_30%] items-center">
                     <Label>Import credentials from JSON</Label>
                     <>
                       <label
@@ -242,7 +242,7 @@ function Dashboard({
                       />
                     </>
                   </div>
-                  <div className="grid grid-cols-[70%_30%] items-center">
+                  <div className="change-password grid grid-cols-[70%_30%] items-center">
                     <Dialog>
                       <Label>Change login password</Label>
                       <DialogTrigger asChild>
@@ -281,7 +281,7 @@ function Dashboard({
                       </DialogContent>
                     </Dialog>
                   </div>
-                  <div className="grid grid-cols-[70%_30%] items-center">
+                  <div className="theme-mode grid grid-cols-[70%_30%] items-center">
                     <Label htmlFor="theme">Change Theme mode</Label>
                     <DropdownMenu id="theme">
                       <DropdownMenuTrigger asChild>
@@ -314,7 +314,7 @@ function Dashboard({
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <div className="grid grid-cols-[70%_30%] items-center">
+                  <div className="logout grid grid-cols-[70%_30%] items-center">
                     <Label>Log out from this device</Label>
                     <button
                       id="logout-btn"
