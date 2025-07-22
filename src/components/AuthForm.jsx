@@ -64,6 +64,7 @@ export default function AuthForm({
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
                     required
+                    autoFocus
                   />
                 </div>
                 <div className="grid gap-2">
