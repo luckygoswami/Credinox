@@ -262,11 +262,11 @@ function CredentialsList({
                               <div
                                 key={key}
                                 className="cred-container flex justify-between">
-                                <div className="cred-key mr-5 text-black transition duration-300 dark:text-gray-200">
+                                <div className="cred-key mr-5 text-black transition duration-300 dark:text-gray-200 w-[50%] truncate">
                                   {key}
                                 </div>
-                                <div className="flex">
-                                  <div className="cred-value text-black transition duration-300 dark:text-gray-300">
+                                <div className="flex w-[50%]">
+                                  <div className="cred-value text-black transition duration-300 dark:text-gray-300 truncate flex-1 text-right">
                                     {key === 'password'
                                       ? decryptPassword(value)
                                       : value}
