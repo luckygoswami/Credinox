@@ -182,7 +182,7 @@ function Dashboard({
       <div className="flex flex-col bg-white transition duration-300 dark:bg-gray-800 rounded-lg overflow-hidden h-[100%] shadow-lg">
         {/* Dashboard header */}
         <div className="user-info flex justify-between items-center p-3">
-          <h2 className="text-2xl font-bold text-gray-800 transition duration-300 dark:text-gray-200">
+          <h2 className="text-2xl font-bold text-gray-800 transition duration-300 dark:text-gray-200 truncate">
             {user.email}
           </h2>
 
