@@ -123,7 +123,9 @@ function CredentialsList({
                       onClick={(e) =>
                         e.target.id === 'toggleable' && toggleExpand(index)
                       }>
-                      <span id="toggleable">
+                      <span
+                        id="toggleable"
+                        className="truncate">
                         {credential.service}{' '}
                         {(credential.user && `(${credential.user})`) ||
                           (credential.User && `(${credential.User})`)}
