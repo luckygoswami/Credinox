@@ -285,15 +285,15 @@ function CredentialsList({
                             )
                         )}
                         <div className="meta-info justify-between">
-                          <div className="create-info font-light text-sm flex justify-between">
-                            created at{' '}
-                            <span className="italic ">
+                          <div className="create-info font-light text-sm flex justify-between truncate">
+                            created at &nbsp;
+                            <span className="italic">
                               {getDateAndTime(credential.createdAt)}
                             </span>
                           </div>
-                          <div className="update-info font-light text-sm flex justify-between">
-                            updated at{' '}
-                            <span className="italic ">
+                          <div className="update-info font-light text-sm flex justify-between truncate">
+                            updated at &nbsp;
+                            <span className="italic">
                               {getDateAndTime(credential.updatedAt)}
                             </span>
                           </div>
